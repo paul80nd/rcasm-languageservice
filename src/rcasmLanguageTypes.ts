@@ -1,6 +1,18 @@
-import { MarkupContent, MarkupKind } from 'vscode-languageserver-types';
+import {		
+	Position, Range, Location,
+	MarkupContent, MarkupKind,
+	SymbolInformation, SymbolKind,
+	InsertTextFormat, DocumentHighlight, DocumentHighlightKind
+} from 'vscode-languageserver-types';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 
-export * from 'vscode-languageserver-types';
+export {
+	TextDocument,
+	Position, Range, Location,
+	MarkupContent, MarkupKind,
+	SymbolInformation, SymbolKind,
+	InsertTextFormat, DocumentHighlight, DocumentHighlightKind,
+};
 
 export enum TokenType {
 	Binary,
@@ -17,7 +29,7 @@ export enum TokenType {
 	InvalidChar
 }
 
-export type Program = {
+export declare type RCASMProgram = {
 
 };
 

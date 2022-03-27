@@ -5,19 +5,19 @@ import { RCASMHover } from './services/rcasmHover';
 import { RCASMNavigation } from './services/rcasmNavigation';
 import { Diagnostic, Position, CompletionList, Hover, SymbolInformation, DocumentHighlight } from 'vscode-languageserver-types';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { Program, Location, LanguageSettings, LanguageServiceOptions } from './rcasmLanguageTypes';
+import { RCASMProgram, Location, LanguageSettings, LanguageServiceOptions } from './rcasmLanguageTypes';
 
 export * from './rcasmLanguageTypes';
 
 export interface LanguageService {
-	doValidation(document: TextDocument, program: Program, documentSettings?: LanguageSettings): Diagnostic[];
-	parseProgram(document: TextDocument): Program;
-	findDocumentHighlights(document: TextDocument, position: Position, program: Program): DocumentHighlight[];
-	doComplete(document: TextDocument, position: Position, program: Program): CompletionList;
-	doHover(document: TextDocument, position: Position, program: Program): Hover | null;
-	findDefinition(document: TextDocument, position: Position, program: Program): Location | null;
-	findReferences(document: TextDocument, position: Position, program: Program): Location[];
-	findDocumentSymbols(document: TextDocument, program: Program): SymbolInformation[];
+	doValidation(document: TextDocument, program: RCASMProgram, documentSettings?: LanguageSettings): Diagnostic[];
+	parseProgram(document: TextDocument): RCASMProgram;
+	findDocumentHighlights(document: TextDocument, position: Position, program: RCASMProgram): DocumentHighlight[];
+	doComplete(document: TextDocument, position: Position, program: RCASMProgram): CompletionList;
+	doHover(document: TextDocument, position: Position, program: RCASMProgram): Hover | null;
+	findDefinition(document: TextDocument, position: Position, program: RCASMProgram): Location | null;
+	findReferences(document: TextDocument, position: Position, program: RCASMProgram): Location[];
+	findDocumentSymbols(document: TextDocument, program: RCASMProgram): SymbolInformation[];
 }
 
 export function getLanguageService(options?: LanguageServiceOptions): LanguageService {

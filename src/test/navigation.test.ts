@@ -6,7 +6,7 @@ import * as nodes from '../parser/rcasmNodes';
 import {
 	TextDocument, DocumentHighlightKind, Range, Position,
 	SymbolKind, SymbolInformation, Location,
-	getLanguageService, LanguageService, Program
+	getLanguageService, LanguageService, RCASMProgram
 } from '../rcasmLanguageService';
 
 export function assertSymbols(ls: LanguageService, input: string, expected: SymbolInformation[], lang: string = 'rcasm') {
@@ -42,7 +42,7 @@ export function assertHighlights(ls: LanguageService, input: string, marker: str
 	assert.equal(nWrites, expectedWrites, input);
 }
 
-function assertNoErrors(program: Program): void {
+function assertNoErrors(program: RCASMProgram): void {
 	const markers = nodes.ParseErrorCollector.entries(<nodes.Program>program);
 	if (markers.length > 0) {
 		assert.ok(false, 'node has errors: ' + markers[0].getMessage() + ', offset: ' + markers[0].getNode().offset);
