@@ -5,7 +5,7 @@ import { RCASMHover } from './services/rcasmHover';
 import { RCASMNavigation } from './services/rcasmNavigation';
 import { Diagnostic, Position, CompletionList, Hover, SymbolInformation, DocumentHighlight } from 'vscode-languageserver-types';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { Program, LanguageSettings, LanguageServiceOptions } from './rcasmLanguageTypes';
+import { Program, Location, LanguageSettings, LanguageServiceOptions } from './rcasmLanguageTypes';
 
 export * from './rcasmLanguageTypes';
 
@@ -15,6 +15,8 @@ export interface LanguageService {
 	findDocumentHighlights(document: TextDocument, position: Position, program: Program): DocumentHighlight[];
 	doComplete(document: TextDocument, position: Position, program: Program): CompletionList;
 	doHover(document: TextDocument, position: Position, program: Program): Hover | null;
+	findDefinition(document: TextDocument, position: Position, program: Program): Location | null;
+	findReferences(document: TextDocument, position: Position, program: Program): Location[];
 	findDocumentSymbols(document: TextDocument, program: Program): SymbolInformation[];
 }
 
@@ -30,6 +32,8 @@ export function getLanguageService(options?: LanguageServiceOptions): LanguageSe
 		parseProgram: rcasmParser.parseProgram.bind(rcasmParser),
 		doComplete: rcasmCompletion.doComplete.bind(rcasmCompletion),
 		doHover: rcasmHover.doHover.bind(rcasmHover),
+		findDefinition: rcasmNavigation.findDefinition.bind(rcasmNavigation),
+		findReferences: rcasmNavigation.findReferences.bind(rcasmNavigation),
 		findDocumentHighlights: rcasmNavigation.findDocumentHighlights.bind(rcasmNavigation),
 		findDocumentSymbols: rcasmNavigation.findDocumentSymbols.bind(rcasmNavigation),
 	};
