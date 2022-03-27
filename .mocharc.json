@@ -1,4 +1,6 @@
 {
     "ui": "tdd",
-    "color": true
+    "color": true,
+    "spec": "./lib/umd/test/**/*.test.js",
+    "recursive": true
 }

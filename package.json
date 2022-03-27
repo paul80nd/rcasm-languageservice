@@ -1,6 +1,6 @@
 {
   "name": "@paul80nd/rcasm-languageservice",
-  "version": "4.2.4",
+  "version": "5.3.0",
   "description": "Language services for Relay Computer Assembly",
   "main": "./lib/umd/rcasmLanguageService.js",
   "typings": "./lib/umd/rcasmLanguageService",
@@ -34,7 +34,7 @@
   "scripts": {
     "prepublishOnly": "npm run clean && npm run compile-esm && npm run test && npm run remove-sourcemap-refs",
     "postpublish": "node ./build/post-publish.js",
-    "compile": "tsc -p ./src",
+    "compile": "tsc -p ./src && npm run lint ",
     "compile-esm": "tsc -p ./src/tsconfig.esm.json",
     "watch": "tsc -w -p ./src",
     "clean": "rimraf lib",

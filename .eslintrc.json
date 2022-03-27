@@ -22,6 +22,9 @@
         "curly": "warn",
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
-        "semi": "off"
+        "semi": "off",
+        "no-unused-expressions": "warn",
+        "no-duplicate-imports": "warn",
+        "new-parens": "warn"
     }
 }
