@@ -7,16 +7,16 @@ export interface IToken {
 	len: number;
 }
 
-export class MultiLineStream {
+class MultiLineStream {
 
 	private source: string;
 	private len: number;
 	private position: number;
 
-	constructor(source: string) {
+	constructor(source: string, position: number) {
 		this.source = source;
 		this.len = source.length;
-		this.position = 0;
+		this.position = position;
 	}
 
 	public substring(from: number, to: number = this.position): string {
@@ -92,12 +92,12 @@ staticTokenTable[_PLS] = TokenType.Plus;
 
 export class Scanner {
 
-	public stream: MultiLineStream = new MultiLineStream('');
+	public stream: MultiLineStream = new MultiLineStream('', 0);
 	public ignoreComment = true;
 	public ignoreWhitespace = true;
 
-	public setSource(input: string): void {
-		this.stream = new MultiLineStream(input);
+	public setSource(input: string, initialOffset = 0): void {
+		this.stream = new MultiLineStream(input, initialOffset);
 	}
 
 	public finishToken(offset: number, type: TokenType, text?: string): IToken {
