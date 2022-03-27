@@ -242,8 +242,6 @@ export interface NodeConstructor {
 }
 
 export class Nodelist extends Node {
-	private _nodeList: void; // workaround for https://github.com/Microsoft/TypeScript/issues/12083
-
 	constructor(parent: Node, index: number = -1) {
 		super(-1, -1);
 		this.attachTo(parent, index);
