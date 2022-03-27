@@ -1,14 +1,16 @@
 import { Parser } from './parser/rcasmParser';
+import { RCASMValidation } from './services/rcasmValidation';
 import { RCASMCompletion } from './services/rcasmCompletion';
 import { RCASMHover } from './services/rcasmHover';
 import { RCASMNavigation } from './services/rcasmNavigation';
-import { Position, CompletionList, Hover, SymbolInformation, DocumentHighlight } from 'vscode-languageserver-types';
+import { Diagnostic, Position, CompletionList, Hover, SymbolInformation, DocumentHighlight } from 'vscode-languageserver-types';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { Program, LanguageServiceOptions } from './rcasmLanguageTypes';
+import { Program, LanguageSettings, LanguageServiceOptions } from './rcasmLanguageTypes';
 
 export * from './rcasmLanguageTypes';
 
 export interface LanguageService {
+	doValidation(document: TextDocument, program: Program, documentSettings?: LanguageSettings): Diagnostic[];
 	parseProgram(document: TextDocument): Program;
 	findDocumentHighlights(document: TextDocument, position: Position, program: Program): DocumentHighlight[];
 	doComplete(document: TextDocument, position: Position, program: Program): CompletionList;
@@ -21,8 +23,10 @@ export function getLanguageService(options?: LanguageServiceOptions): LanguageSe
 	const rcasmHover = new RCASMHover(options && options.clientCapabilities);
 	const rcasmCompletion = new RCASMCompletion(options && options.clientCapabilities);
 	const rcasmNavigation = new RCASMNavigation();
+	const rcasmValidation = new RCASMValidation();
 
 	return {
+		doValidation: rcasmValidation.doValidation.bind(rcasmValidation),
 		parseProgram: rcasmParser.parseProgram.bind(rcasmParser),
 		doComplete: rcasmCompletion.doComplete.bind(rcasmCompletion),
 		doHover: rcasmHover.doHover.bind(rcasmHover),

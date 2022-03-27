@@ -92,6 +92,10 @@ export namespace ClientCapabilities {
 	};
 }
 
+export interface LanguageSettings {
+	validate?: boolean;
+}
+
 export interface LanguageServiceOptions {
 	/**
 	 * Describes the LSP capabilities the client supports.
