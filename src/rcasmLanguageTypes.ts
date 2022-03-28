@@ -2,7 +2,8 @@ import {
 	Position, Range, Location,
 	MarkupContent, MarkupKind,
 	SymbolInformation, SymbolKind,
-	InsertTextFormat, DocumentHighlight, DocumentHighlightKind
+	InsertTextFormat, DocumentHighlight, DocumentHighlightKind,
+	Hover, CompletionList
 } from 'vscode-languageserver-types';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
@@ -12,6 +13,7 @@ export {
 	MarkupContent, MarkupKind,
 	SymbolInformation, SymbolKind,
 	InsertTextFormat, DocumentHighlight, DocumentHighlightKind,
+	Hover, CompletionList
 };
 
 export enum TokenType {
