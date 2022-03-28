@@ -1,6 +1,6 @@
 {
   "name": "@paul80nd/rcasm-languageservice",
-  "version": "5.3.0",
+  "version": "5.3.1",
   "description": "Language services for Relay Computer Assembly",
   "main": "./lib/umd/rcasmLanguageService.js",
   "typings": "./lib/umd/rcasmLanguageService",
@@ -13,7 +13,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "license": "MIT",  
+  "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^9.1.0",
     "@types/node": "^10.12.21",
