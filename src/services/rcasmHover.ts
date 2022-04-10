@@ -1,8 +1,8 @@
 'use strict';
 
-import * as nodes from '../parser/rcasmNodes';
+import * as rcasm from '@paul80nd/rcasm';
 import * as languageFacts from '../languageFacts/facts';
-import { TextDocument, Range, Position, Hover, MarkedString, MarkupContent, MarkupKind, ClientCapabilities } from '../rcasmLanguageTypes';
+import { TextDocument, Range, Position, Hover, MarkedString, MarkupContent, MarkupKind, ClientCapabilities, IMnemonicData } from '../rcasmLanguageTypes';
 import { isDefined } from '../utils/objects';
 
 export class RCASMHover {
@@ -11,36 +11,30 @@ export class RCASMHover {
 	constructor(private readonly clientCapabilities: ClientCapabilities | undefined) {
 	}
 
-	public doHover(document: TextDocument, position: Position, program: nodes.Program): Hover | null {
-		function getRange(node: nodes.Node) {
-			return Range.create(document.positionAt(node.offset), document.positionAt(node.end));
-		}
+	public doHover(document: TextDocument, position: Position): Hover | null {
 
+		// Parse and find line
+		const lines = rcasm.parseOnly(document.getText());
+		const line = lines?.find(l => l.loc.start.line === position.line + 1);
+		if (!line || !line.stmt) { return null; }
+
+		// Confirm position within statement (not label or comment)
 		const offset = document.offsetAt(position);
-		const nodepath = nodes.getNodePath(program, offset);
+		if (offset < line.stmt.loc.start.offset || offset > line.stmt.loc.end.offset) { return null; }
 
-		/**
-		 * nodepath is top-down
-		 * Build up the hover by appending inner node's information
-		 */
+		// Make hover for statement
 		let hover: Hover | null = null;
-
-		for (let i = 0; i < nodepath.length; i++) {
-			const node = nodepath[i];
-
-			if (node instanceof nodes.Opcode) {
-				const opcode = node as nodes.Opcode;
-				const mnemonicName = nodes.OpcodeType[opcode.opcode].toLowerCase();
-				const entry = languageFacts.rcasmDataManager.getMnemonic(mnemonicName);
-				if (entry) {
-					const paramNames = this.getParamNames(opcode);
-					const content = languageFacts.getEntrySpecificDescription(entry, paramNames, this.doesSupportMarkdown());
-					hover = {
-						contents: content,
-						range: getRange(node)
-					};
-				}
-				continue;
+		const stmt = line.stmt;
+		if (stmt.type === 'insn') {
+			const mnemonicName = stmt.mnemonic.toLowerCase();
+			const entry = languageFacts.rcasmDataManager.getMnemonic(mnemonicName);
+			if (entry) {
+				const paramNames = this.getParamNames(entry, stmt);
+				const content = languageFacts.getEntrySpecificDescription(entry, paramNames, this.doesSupportMarkdown());
+				hover = {
+					contents: content,
+					range: Range.create(document.positionAt(stmt.loc.start.offset), document.positionAt(stmt.loc.end.offset))
+				};
 			}
 		}
 
@@ -51,17 +45,19 @@ export class RCASMHover {
 		return hover;
 	}
 
-	private getParamNames(opcode: nodes.Opcode): string[] {
+	private getParamNames(entry: IMnemonicData, stmt: rcasm.StmtInsn): string[] {
 		let paramNames: string[] = [];
 
-		if (opcode.primaryParam) {
-			paramNames.push(this.getParamName(opcode.primaryParam, opcode.opcode));
+		if (stmt.p1) {
+			paramNames.push(this.getParamName(stmt.p1, stmt.mnemonic));
+		} else if (entry.class === 'ALU') {
+			paramNames.push('A');
 		} else {
 			paramNames.push('?');
 		}
 
-		if (opcode.secondaryParam) {
-			paramNames.push(this.getParamName(opcode.secondaryParam, opcode.opcode));
+		if (stmt.p2) {
+			paramNames.push(this.getParamName(stmt.p2, stmt.mnemonic));
 		} else {
 			paramNames.push('?');
 		}
@@ -69,31 +65,21 @@ export class RCASMHover {
 		return paramNames;
 	}
 
-	private getParamName(param: nodes.Node, opcode: nodes.OpcodeType): string {
+	private getParamName(param: rcasm.Operand, mnemonic: string): string {
 
-		if (param.isErroneous()) {
-			return '?';
+		switch (param.type) {
+			case 'register':
+				return param.value.toUpperCase();
+			case 'qualified-ident':
+				return `(${param.path[0]})`;
+			case 'literal':
+				if (mnemonic.toLowerCase() === 'ldi' && param.value > 15) {
+					return `0x${param.value.toString(16).toUpperCase()}`;
+				}
+				return param.value.toString();
+			default:
+				return '?';
 		}
-
-		if (param instanceof nodes.Register) {
-			const regParam = param as nodes.Register;
-			return nodes.RegisterType[regParam.register];
-		}
-
-		if (param instanceof nodes.LabelRef) {
-			const regLabel = param as nodes.LabelRef;
-			return `(${regLabel.getText()})`;
-		}
-
-		if (param instanceof nodes.Constant) {
-			const constParam = param as nodes.Constant;
-			if (opcode === nodes.OpcodeType.LDI && constParam.value > 15) {
-				return `0x${constParam.value.toString(16).toUpperCase()}`;
-			}
-			return constParam.value.toString();
-		}
-
-		return '?';
 	}
 
 	private convertContents(contents: MarkupContent | MarkedString | MarkedString[]): MarkupContent | MarkedString | MarkedString[] {

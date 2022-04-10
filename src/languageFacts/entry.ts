@@ -91,7 +91,11 @@ function getEntrySpecificStringDescription(entry: IEntry2): string {
 	let result: string = '';
 
 	if (entry.summary) {
-		result += `${entry.summary}\n\n`;
+		if (entry.class) {
+			result += `${entry.summary} [${entry.class}]\n\n`;
+		} else {
+			result += `${entry.summary}\n\n`;
+		}
 	}
 
 	result += entry.synopsis;
@@ -107,7 +111,11 @@ function getEntrySpecificMarkdownDescription(entry: IEntry2): string {
 	let result: string = '';
 
 	if (entry.summary) {
-		result += `${entry.summary}\n\n`;
+		if (entry.class) {
+			result += `${entry.summary} [${entry.class}]\n\n`;
+		} else {
+			result += `${entry.summary}\n\n`;
+		}
 	}
 
 	result += '`' + entry.synopsis + '`';

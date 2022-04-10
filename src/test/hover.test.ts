@@ -3,9 +3,9 @@
 import * as assert from 'assert';
 import { Hover, MarkupContent, TextDocument, getLanguageService } from '../rcasmLanguageService';
 
-export function assertHover(value: string, expectedHoverContent: MarkupContent | undefined, expectedHoverOffset: number | undefined): void {
+export function assertHover(value: string, expectedHoverContent: MarkupContent | null, expectedHoverOffset: number | null): void {
 	const offset = value.indexOf('|');
-	value = value.substr(0, offset) + value.substr(offset + 1);
+	value = value.slice(0, offset) + value.slice(offset + 1);
 
 	const document = TextDocument.create('test://test/test.rcasm', 'rcasm', 0, value);
 
@@ -14,8 +14,8 @@ export function assertHover(value: string, expectedHoverContent: MarkupContent |
 	const program = ls.parseProgram(document);
 
 	const hover = ls.doHover(document, position, program);
-	assert.deepEqual(hover && hover.contents, expectedHoverContent);
-	assert.equal(hover && document.offsetAt(hover.range!.start), expectedHoverOffset);
+	assert.deepStrictEqual(hover && hover.contents, expectedHoverContent);
+	assert.strictEqual(hover && document.offsetAt(hover.range!.start), expectedHoverOffset);
 }
 
 suite('Instruction Hover', () => {
@@ -25,13 +25,13 @@ suite('Instruction Hover', () => {
 			value: 'Arithmetic Add [ALU]\n\n`A = B + C`'
 		};
 
-		assertHover('| add', void 0, void 0);
+		assertHover('| add', null, null);
 		assertHover('|add', addContent, 0);
 		assertHover('a|dd', addContent, 0);
 		assertHover('add|', addContent, 0);
 		assertHover('add \n ad|d', addContent, 6);
-		assertHover('lab|el: add', void 0, void 0);
-		assertHover('add ;comm|ent', void 0, void 0);
+		assertHover('lab|el: add', null, null);
+		assertHover('add ;comm|ent', null, null);
 	});
 
 	test('ALU', function (): any {
@@ -44,10 +44,10 @@ suite('Instruction Hover', () => {
 
 	test('Bad Params', function (): any {
 		assertHover('mov|', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`? = ?`' }, 0);
-		assertHover('mov| ,b', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`? = ?`' }, 0);
-		assertHover('mov| a,', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`A = ?`' }, 0);
-		assertHover('mov| q,', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`? = ?`' }, 0);
-		assertHover('mov| q,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`? = C`' }, 0);
+		assertHover('mov| ,b', null, null);
+		assertHover('mov| a,', null, null);
+		assertHover('mov| q,', null, null);
+		assertHover('mov| q,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`(q) = C`' }, 0);
 	});
 
 	test('MOV', function (): any {

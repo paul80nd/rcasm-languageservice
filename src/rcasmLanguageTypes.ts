@@ -109,6 +109,7 @@ export interface LanguageServiceOptions {
 
 export interface IMnemonicData {
 	name: string;
+	class: string | undefined;
 	summary: string;
 	snippet?: string;
 	description?: string | MarkupContent;

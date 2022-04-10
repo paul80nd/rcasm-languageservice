@@ -68,7 +68,7 @@ export class RCASMCompletion {
 
 			const item: CompletionItem = {
 				label: entry.name,
-				detail: entry.summary,
+				detail: entry.class ? `${entry.summary} [${entry.class}]` : entry.summary,
 				documentation: languageFacts.getEntryDescription(entry, this.doesSupportMarkdown()),
 				textEdit: TextEdit.replace(range, insertText),
 				insertTextFormat: InsertTextFormat.Snippet,
