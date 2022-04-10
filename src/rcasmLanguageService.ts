@@ -20,7 +20,7 @@ export interface LanguageService {
 	doValidation(document: TextDocument, documentSettings?: LanguageSettings): Diagnostic[];
 	parseProgram(document: TextDocument): RCASMProgram;
 	doComplete(document: TextDocument, position: Position, program: RCASMProgram): CompletionList;
-	doHover(document: TextDocument, position: Position, program: RCASMProgram): Hover | null;
+	doHover(document: TextDocument, position: Position): Hover | null;
 	findDefinition(document: TextDocument, position: Position, program: RCASMProgram): Location | null;
 	findReferences(document: TextDocument, position: Position, program: RCASMProgram): Location[];
 	findDocumentHighlights(document: TextDocument, position: Position, program: RCASMProgram): DocumentHighlight[];

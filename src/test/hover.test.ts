@@ -11,9 +11,8 @@ export function assertHover(value: string, expectedHoverContent: MarkupContent |
 
 	const position = document.positionAt(offset);
 	const ls = getLanguageService();
-	const program = ls.parseProgram(document);
 
-	const hover = ls.doHover(document, position, program);
+	const hover = ls.doHover(document, position);
 	assert.deepStrictEqual(hover && hover.contents, expectedHoverContent);
 	assert.strictEqual(hover && document.offsetAt(hover.range!.start), expectedHoverOffset);
 }
