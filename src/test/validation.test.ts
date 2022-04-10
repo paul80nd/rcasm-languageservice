@@ -63,8 +63,8 @@ suite('RCASM - Validate', () => {
 	test('opc mis-ops', function () {
 		assertDiagnostic('opc', 'Parameter required', 0, 0, 0, 3);
 		assertDiagnostic('opc a', 'Literal required', 0, 4, 0, 5);
-		assertDiagnostic('opc 111111111b', 'Literal out of range (must be between 0 and 11111111)', 0, 4, 0, 14);
-		assertDiagnostic('opc 1FFh', 'Literal out of range (must be between 0 and ff)', 0, 4, 0, 8);
+		assertDiagnostic('opc 111111111b', 'Literal out of range (must be between 00000000b and 11111111b)', 0, 4, 0, 14);
+		assertDiagnostic('opc 0x1FF', 'Literal out of range (must be between 0x00 and 0xFF)', 0, 4, 0, 9);
 		assertDiagnostic('opc 256', 'Literal out of range (must be between 0 and 255)', 0, 4, 0, 7);
 	});
 
