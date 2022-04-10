@@ -1,17 +1,17 @@
+'use strict';
+
 import * as nodes from '../parser/rcasmNodes';
 import * as languageFacts from '../languageFacts/facts';
-import { Range, Position, Hover, MarkedString, MarkupContent, MarkupKind } from 'vscode-languageserver-types';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { ClientCapabilities } from '../rcasmLanguageTypes';
+import { TextDocument, Range, Position, Hover, MarkedString, MarkupContent, MarkupKind, ClientCapabilities } from '../rcasmLanguageTypes';
 import { isDefined } from '../utils/objects';
 
 export class RCASMHover {
 	private supportsMarkdown: boolean | undefined;
 
-	constructor(private clientCapabilities: ClientCapabilities | undefined) { }
+	constructor(private readonly clientCapabilities: ClientCapabilities | undefined) {
+	}
 
-	doHover(document: TextDocument, position: Position, program: nodes.Program): Hover | null {
-
+	public doHover(document: TextDocument, position: Position, program: nodes.Program): Hover | null {
 		function getRange(node: nodes.Node) {
 			return Range.create(document.positionAt(node.offset), document.positionAt(node.end));
 		}
@@ -130,7 +130,7 @@ export class RCASMHover {
 				return this.supportsMarkdown;
 			}
 
-			const hover = this.clientCapabilities?.textDocument && this.clientCapabilities.textDocument.hover;
+			const hover = this.clientCapabilities.textDocument && this.clientCapabilities.textDocument.hover;
 			this.supportsMarkdown = hover && hover.contentFormat && Array.isArray(hover.contentFormat) && hover.contentFormat.indexOf(MarkupKind.Markdown) !== -1;
 		}
 		return <boolean>this.supportsMarkdown;

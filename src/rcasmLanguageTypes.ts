@@ -1,12 +1,12 @@
 'use strict';
 
 import {
-	Range, Position, MarkupContent, MarkupKind,
+	Range, Position, MarkupContent, MarkupKind, MarkedString,
 	Diagnostic, DiagnosticSeverity,
 	CompletionList,
 	InsertTextFormat,
-	SymbolInformation, SymbolKind, Location, Hover, 
-	DocumentHighlight, 
+	SymbolInformation, SymbolKind, Location, Hover,
+	DocumentHighlight,
 	DocumentHighlightKind
 } from 'vscode-languageserver-types';
 
@@ -14,14 +14,18 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 
 export {
 	TextDocument,
-	Range, Position, MarkupContent, MarkupKind,
+	Range, Position, MarkupContent, MarkupKind, MarkedString,
 	Diagnostic, DiagnosticSeverity,
 	CompletionList,
 	InsertTextFormat,
-	SymbolInformation, SymbolKind, Location, Hover,	
-	DocumentHighlight,	
+	SymbolInformation, SymbolKind, Location, Hover,
+	DocumentHighlight,
 	DocumentHighlightKind
 };
+
+export interface LanguageSettings {
+	validate?: boolean;
+}
 
 export enum TokenType {
 	Binary,
@@ -95,11 +99,8 @@ export namespace ClientCapabilities {
 	};
 }
 
-export interface LanguageSettings {
-	validate?: boolean;
-}
-
 export interface LanguageServiceOptions {
+
 	/**
 	 * Describes the LSP capabilities the client supports.
 	 */

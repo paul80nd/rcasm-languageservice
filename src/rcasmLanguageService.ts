@@ -14,7 +14,6 @@ import {
 	TextDocument
 } from './rcasmLanguageTypes';
 
-export type Stylesheet = {};
 export * from './rcasmLanguageTypes';
 
 export interface LanguageService {
@@ -29,20 +28,20 @@ export interface LanguageService {
 }
 
 export function getLanguageService(options?: LanguageServiceOptions): LanguageService {
-	const rcasmParser = new Parser();
-	const rcasmHover = new RCASMHover(options && options.clientCapabilities);
-	const rcasmCompletion = new RCASMCompletion(options && options.clientCapabilities);
-	const rcasmNavigation = new RCASMNavigation();
-	const rcasmValidation = new RCASMValidation();
+	const parser = new Parser();
+	const hover = new RCASMHover(options && options.clientCapabilities);
+	const completion = new RCASMCompletion(options && options.clientCapabilities);
+	const navigation = new RCASMNavigation();
+	const validation = new RCASMValidation();
 
 	return {
-		doValidation: rcasmValidation.doValidation.bind(rcasmValidation),
-		parseProgram: rcasmParser.parseProgram.bind(rcasmParser),
-		doComplete: rcasmCompletion.doComplete.bind(rcasmCompletion),
-		doHover: rcasmHover.doHover.bind(rcasmHover),
-		findDefinition: rcasmNavigation.findDefinition.bind(rcasmNavigation),
-		findReferences: rcasmNavigation.findReferences.bind(rcasmNavigation),
-		findDocumentHighlights: rcasmNavigation.findDocumentHighlights.bind(rcasmNavigation),
-		findDocumentSymbols: rcasmNavigation.findDocumentSymbols.bind(rcasmNavigation),
+		doValidation: validation.doValidation.bind(validation),
+		parseProgram: parser.parseProgram.bind(parser),
+		doComplete: completion.doComplete.bind(completion),
+		doHover: hover.doHover.bind(hover),
+		findDefinition: navigation.findDefinition.bind(navigation),
+		findReferences: navigation.findReferences.bind(navigation),
+		findDocumentHighlights: navigation.findDocumentHighlights.bind(navigation),
+		findDocumentSymbols: navigation.findDocumentSymbols.bind(navigation),
 	};
 }

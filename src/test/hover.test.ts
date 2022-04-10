@@ -1,8 +1,25 @@
-import { assertHover } from './hoverUtil';
-import { MarkupContent } from 'vscode-languageserver-types';
+'use strict';
+
+import * as assert from 'assert';
+import { Hover, MarkupContent, TextDocument, getLanguageService } from '../rcasmLanguageService';
+
+export function assertHover(value: string, expectedHoverContent: MarkupContent | undefined, expectedHoverOffset: number | undefined): void {
+	const offset = value.indexOf('|');
+	value = value.substr(0, offset) + value.substr(offset + 1);
+
+	const document = TextDocument.create('test://test/test.rcasm', 'rcasm', 0, value);
+
+	const position = document.positionAt(offset);
+	const ls = getLanguageService();
+	const program = ls.parseProgram(document);
+
+	const hover = ls.doHover(document, position, program);
+	assert.deepEqual(hover && hover.contents, expectedHoverContent);
+	assert.equal(hover && document.offsetAt(hover.range!.start), expectedHoverOffset);
+}
 
 suite('Instruction Hover', () => {
-	test('Simple Position', function (): any {
+	test('Simple Position', () => {
 		const addContent: MarkupContent = {
 			kind: 'markdown',
 			value: 'Arithmetic Add [ALU]\n\n`A = B + C`'
