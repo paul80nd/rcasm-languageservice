@@ -1,8 +1,7 @@
 'use strict';
 
-import * as nodes from '../parser/rcasmNodes';
-import { LanguageSettings } from '../rcasmLanguageTypes';
-import { TextDocument, Range, Diagnostic, DiagnosticSeverity } from 'vscode-languageserver-types';
+import * as rcasm from '@paul80nd/rcasm';
+import { TextDocument, Diagnostic, DiagnosticSeverity, LanguageSettings } from '../rcasmLanguageTypes';
 
 export class RCASMValidation {
 
@@ -15,27 +14,29 @@ export class RCASMValidation {
 		this.settings = settings;
 	}
 
-	public doValidation(document: TextDocument, program: nodes.Program, settings: LanguageSettings | undefined = this.settings): Diagnostic[] {
+	public doValidation(document: TextDocument, settings: LanguageSettings | undefined = this.settings): Diagnostic[] {
 		if (settings && settings.validate === false) {
 			return [];
 		}
 
-		const entries: nodes.IMarker[] = [];
-		entries.push.apply(entries, nodes.ParseErrorCollector.entries(program));
+		const { errors, warnings } = rcasm.assemble(document.getText());
 
-		function toDiagnostic(marker: nodes.IMarker): Diagnostic {
-			const range = Range.create(document.positionAt(marker.getOffset()), document.positionAt(marker.getOffset() + marker.getLength()));
-			const source = document.languageId;
-
+		let toDiagnostic = (e: rcasm.Diagnostic, s: DiagnosticSeverity): Diagnostic => {
 			return <Diagnostic>{
-				code: marker.getRule().id,
-				source: source,
-				message: marker.getMessage(),
-				severity: marker.getLevel() === nodes.Level.Warning ? DiagnosticSeverity.Warning : DiagnosticSeverity.Error,
-				range: range
+				severity: s,
+				range: {
+					start: document!.positionAt(e.loc.start.offset),
+					end: document!.positionAt(e.loc.end.offset)
+				},
+				message: e.msg,
+				source: document.languageId
 			};
-		}
+		};
 
-		return entries.filter(entry => entry.getLevel() !== nodes.Level.Ignore).map(toDiagnostic);
+		const entries: Diagnostic[] = [];
+		entries.push(...errors.map(e => toDiagnostic(e, DiagnosticSeverity.Error)));
+		entries.push(...warnings.map(e => toDiagnostic(e, DiagnosticSeverity.Warning)));
+
+		return entries;
 	}
 }

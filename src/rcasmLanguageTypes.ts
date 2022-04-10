@@ -1,19 +1,26 @@
-import {		
-	Position, Range, Location,
-	MarkupContent, MarkupKind,
-	SymbolInformation, SymbolKind,
-	InsertTextFormat, DocumentHighlight, DocumentHighlightKind,
-	Hover, CompletionList
+'use strict';
+
+import {
+	Range, Position, MarkupContent, MarkupKind,
+	Diagnostic, DiagnosticSeverity,
+	CompletionList,
+	InsertTextFormat,
+	SymbolInformation, SymbolKind, Location, Hover, 
+	DocumentHighlight, 
+	DocumentHighlightKind
 } from 'vscode-languageserver-types';
+
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
 export {
 	TextDocument,
-	Position, Range, Location,
-	MarkupContent, MarkupKind,
-	SymbolInformation, SymbolKind,
-	InsertTextFormat, DocumentHighlight, DocumentHighlightKind,
-	Hover, CompletionList
+	Range, Position, MarkupContent, MarkupKind,
+	Diagnostic, DiagnosticSeverity,
+	CompletionList,
+	InsertTextFormat,
+	SymbolInformation, SymbolKind, Location, Hover,	
+	DocumentHighlight,	
+	DocumentHighlightKind
 };
 
 export enum TokenType {
@@ -34,24 +41,6 @@ export enum TokenType {
 export declare type RCASMProgram = {
 
 };
-
-export interface IMnemonicData {
-	name: string;
-	summary: string;
-	snippet?: string;
-	description?: string | MarkupContent;
-	synopsis?: string | MarkupContent;
-	syntax?: string;
-}
-
-export interface RCASMDataV1 {
-	version: 1;
-	mnemonics?: IMnemonicData[];
-}
-
-export interface IRCASMDataProvider {
-	provideMnemonics(): IMnemonicData[];
-}
 
 /**
  * Describes what LSP capabilities the client supports
@@ -115,4 +104,22 @@ export interface LanguageServiceOptions {
 	 * Describes the LSP capabilities the client supports.
 	 */
 	clientCapabilities?: ClientCapabilities;
+}
+
+export interface IMnemonicData {
+	name: string;
+	summary: string;
+	snippet?: string;
+	description?: string | MarkupContent;
+	synopsis?: string | MarkupContent;
+	syntax?: string;
+}
+
+export interface RCASMDataV1 {
+	version: 1;
+	mnemonics?: IMnemonicData[];
+}
+
+export interface IRCASMDataProvider {
+	provideMnemonics(): IMnemonicData[];
 }

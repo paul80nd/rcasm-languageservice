@@ -1,22 +1,30 @@
+'use strict';
+
 import { Parser } from './parser/rcasmParser';
-import { RCASMValidation } from './services/rcasmValidation';
 import { RCASMCompletion } from './services/rcasmCompletion';
 import { RCASMHover } from './services/rcasmHover';
 import { RCASMNavigation } from './services/rcasmNavigation';
-import { Diagnostic, Position, CompletionList, Hover, SymbolInformation, DocumentHighlight } from 'vscode-languageserver-types';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { RCASMProgram, Location, LanguageSettings, LanguageServiceOptions } from './rcasmLanguageTypes';
+import { RCASMValidation } from './services/rcasmValidation';
 
+import {
+	RCASMProgram,
+	LanguageSettings, LanguageServiceOptions,
+	Diagnostic, Position, CompletionList, Hover, Location, DocumentHighlight,
+	SymbolInformation,
+	TextDocument
+} from './rcasmLanguageTypes';
+
+export type Stylesheet = {};
 export * from './rcasmLanguageTypes';
 
 export interface LanguageService {
-	doValidation(document: TextDocument, program: RCASMProgram, documentSettings?: LanguageSettings): Diagnostic[];
+	doValidation(document: TextDocument, documentSettings?: LanguageSettings): Diagnostic[];
 	parseProgram(document: TextDocument): RCASMProgram;
-	findDocumentHighlights(document: TextDocument, position: Position, program: RCASMProgram): DocumentHighlight[];
 	doComplete(document: TextDocument, position: Position, program: RCASMProgram): CompletionList;
 	doHover(document: TextDocument, position: Position, program: RCASMProgram): Hover | null;
 	findDefinition(document: TextDocument, position: Position, program: RCASMProgram): Location | null;
 	findReferences(document: TextDocument, position: Position, program: RCASMProgram): Location[];
+	findDocumentHighlights(document: TextDocument, position: Position, program: RCASMProgram): DocumentHighlight[];
 	findDocumentSymbols(document: TextDocument, program: RCASMProgram): SymbolInformation[];
 }
 
