@@ -1,11 +1,11 @@
 'use strict';
 
 import {
-	Range, Position, MarkupContent, MarkupKind, MarkedString,
+	Range, Position, MarkupContent, MarkupKind,
 	Diagnostic, DiagnosticSeverity,
 	CompletionList,
 	InsertTextFormat,
-	SymbolInformation, SymbolKind, Location, Hover,
+	SymbolInformation, SymbolKind, Location, Hover, MarkedString,
 	DocumentHighlight,
 	DocumentHighlightKind
 } from 'vscode-languageserver-types';
@@ -14,11 +14,11 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 
 export {
 	TextDocument,
-	Range, Position, MarkupContent, MarkupKind, MarkedString,
+	Range, Position, MarkupContent, MarkupKind,
 	Diagnostic, DiagnosticSeverity,
 	CompletionList,
 	InsertTextFormat,
-	SymbolInformation, SymbolKind, Location, Hover,
+	SymbolInformation, SymbolKind, Location, Hover, MarkedString,
 	DocumentHighlight,
 	DocumentHighlightKind
 };

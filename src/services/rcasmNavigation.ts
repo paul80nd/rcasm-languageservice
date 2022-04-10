@@ -1,8 +1,8 @@
 'use strict';
 
 import {
-	DocumentHighlight, DocumentHighlightKind,/* DocumentLink,*/ Location,
-	Position, Range, SymbolInformation, SymbolKind, /*TextEdit, WorkspaceEdit,*/ TextDocument /*, DocumentContext*/
+	DocumentHighlight, DocumentHighlightKind, Location,
+	Position, Range, SymbolInformation, SymbolKind, TextDocument
 } from '../rcasmLanguageTypes';
 import * as nodes from '../parser/rcasmNodes';
 import { Symbols } from '../parser/rcasmSymbolScope';
