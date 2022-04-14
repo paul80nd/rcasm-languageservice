@@ -1,7 +1,6 @@
 'use strict';
 
 import * as assert from 'assert';
-import * as nodes from '../parser/rcasmNodes';
 
 import {
 	TextDocument, DocumentHighlightKind, Range, Position,
@@ -22,7 +21,6 @@ export function assertHighlights(ls: LanguageService, input: string, marker: str
 	let document = TextDocument.create('test://test/test.css', 'css', 0, input);
 
 	let program = ls.parseProgram(document);
-	assertNoErrors(program);
 
 	let index = input.indexOf(marker) + marker.length;
 	let position = document.positionAt(index);
@@ -40,13 +38,6 @@ export function assertHighlights(ls: LanguageService, input: string, marker: str
 		assert.equal(document.getText().substring(start, end), elementName || marker);
 	}
 	assert.equal(nWrites, expectedWrites, input);
-}
-
-function assertNoErrors(program: RCASMProgram): void {
-	const markers = nodes.ParseErrorCollector.entries(<nodes.Program>program);
-	if (markers.length > 0) {
-		assert.ok(false, 'node has errors: ' + markers[0].getMessage() + ', offset: ' + markers[0].getNode().offset);
-	}
 }
 
 suite('RCASM - Navigation', () => {

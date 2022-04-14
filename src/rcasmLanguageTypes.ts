@@ -27,21 +27,6 @@ export interface LanguageSettings {
 	validate?: boolean;
 }
 
-export enum TokenType {
-	Binary,
-	Comma,
-	Comment,
-	Hexadecimal,
-	Identifier,
-	Integer,
-	Label,
-	Minus,
-	Plus,
-	EOL,
-	EOF,
-	InvalidChar
-}
-
 export declare type RCASMProgram = {
 
 };

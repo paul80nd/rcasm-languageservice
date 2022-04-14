@@ -14,8 +14,8 @@ export class RCASMHover {
 	public doHover(document: TextDocument, position: Position): Hover | null {
 
 		// Parse and find line
-		const lines = rcasm.parseOnly(document.getText());
-		const line = lines?.find(l => l.loc.start.line === position.line + 1);
+		const program = rcasm.parseOnly(document.getText());
+		const line = program?.lines?.find(l => l.loc.start.line === position.line + 1);
 		if (!line || !line.stmt) { return null; }
 
 		// Confirm position within statement (not label or comment)
