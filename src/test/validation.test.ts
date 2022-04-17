@@ -62,16 +62,16 @@ suite('RCASM - Validate', () => {
 
 	test('opc mis-ops', function () {
 		assertDiagnostic('opc', 'Parameter required', 0, 0, 0, 3);
-		assertDiagnostic('opc a', 'Literal required', 0, 4, 0, 5);
-		assertDiagnostic('opc 111111111b', 'Literal out of range (must be between 00000000b and 11111111b)', 0, 4, 0, 14);
+		assertDiagnostic('opc a', 'Unexpected register', 0, 4, 0, 5);
+		assertDiagnostic('opc 111111111b', 'Literal out of range (must be between 0x00 and 0xFF)', 0, 4, 0, 14);
 		assertDiagnostic('opc 0x1FF', 'Literal out of range (must be between 0x00 and 0xFF)', 0, 4, 0, 9);
-		assertDiagnostic('opc 256', 'Literal out of range (must be between 0 and 255)', 0, 4, 0, 7);
+		assertDiagnostic('opc 256', 'Literal out of range (must be between 0x00 and 0xFF)', 0, 4, 0, 7);
 	});
 
 	test('ldi mis-ops', function () {
 		assertDiagnostic('ldi', 'Two parameters required', 0, 0, 0, 3);
 		assertDiagnostic('ldi 56,0', 'Register required', 0, 4, 0, 6);
-		assertDiagnostic('ldi a,g', 'Literal required', 0, 6, 0, 7);
+		assertDiagnostic('ldi a,g', 'Undefined symbol \'g\'', 0, 6, 0, 7);
 		assertDiagnostic('ldi g,3', 'Register required', 0, 4, 0, 5);
 		assertDiagnostic('ldi x,3', 'Invalid register - choose one of [a|b|m|j]', 0, 4, 0, 5);
 		assertDiagnostic('ldi a,16', 'Literal out of range (must be between -16 and 15)', 0, 6, 0, 8);

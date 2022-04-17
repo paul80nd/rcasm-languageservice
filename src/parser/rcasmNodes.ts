@@ -307,7 +307,7 @@ export class Instruction extends Node {
 
 	constructor(si: rcasm.StmtInsn) {
 		super(si, NodeType.Instruction);
-		const addParam = (p: rcasm.Operand): Node | undefined => {
+		const addParam = (p: rcasm.Expr): Node | undefined => {
 			switch (p.type) {
 				case 'literal':
 					return this.adoptChild(new Literal(p));
@@ -335,11 +335,11 @@ export class LabelRef extends Node {
 
 export class Literal extends Node {
 
-	public value: number;
+	public value: number | string;
 
 	constructor(l: rcasm.Literal) {
 		super(l, NodeType.Literal);
-		this.value = l.value;
+		this.value = l.lit;
 	}
 }
 

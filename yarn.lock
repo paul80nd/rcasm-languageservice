@@ -52,10 +52,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@paul80nd/rcasm@^1.0.3":
-  version "1.0.3"
-  resolved "https://npm.pkg.github.com/download/@paul80nd/rcasm/1.0.3/f0b474430523e642f5d76daaae41b37527ce0e80e84bdc0e4c4150b19525c005#b9c5c597ecda5671753ac357e3ec029fecf39470"
-  integrity sha512-C2ncLpXByeHjZHuXM+/Lj53b0XjHGxLPUMgfBSAbzl559Z57sFD/UYlYh2zwbZhUKEaPQ4Jp2t8bkzwmYUaTxQ==
+"@paul80nd/rcasm@^1.0.4":
+  version "1.0.4"
+  resolved "https://npm.pkg.github.com/download/@paul80nd/rcasm/1.0.4/d73c25794274f7c83411b13fdb2cc3fcf868cf4c8229759cb628c87e6fd1e35d#9a3f7df2eb5bf313a2dd9442c807ce0b3d37479d"
+  integrity sha512-RNJ+fillI6QVMOr2ruPx5iSL2urj3AJEsnzMetefhaVDOznbjAYkfoCKLTkEu4gV7wlUDdCdhMczxHB1KcqgTA==
 
 "@types/json-schema@^7.0.9":
   version "7.0.11"
