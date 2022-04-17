@@ -7,7 +7,11 @@ export enum NodeType {
 	Line,
 	Label,
 	LabelRef,
-	Instruction
+	Instruction,
+	Literal,
+	Register,
+	SetPC,
+	Expr
 }
 
 export enum ReferenceType {
@@ -63,18 +67,18 @@ export function getNodeAtOffset(node: Node, offset: number): Node | null {
 	return candidate;
 }
 
-// export function getNodePath(node: Node, offset: number): Node[] {
+export function getNodePath(node: Node, offset: number): Node[] {
 
-// 	let candidate = getNodeAtOffset(node, offset);
-// 	const path: Node[] = [];
+	let candidate = getNodeAtOffset(node, offset);
+	const path: Node[] = [];
 
-// 	while (candidate) {
-// 		path.unshift(candidate);
-// 		candidate = candidate.parent;
-// 	}
+	while (candidate) {
+		path.unshift(candidate);
+		candidate = candidate.parent;
+	}
 
-// 	return path;
-// }
+	return path;
+}
 
 export interface ITextProvider {
 	(offset: number, length: number): string;
@@ -259,6 +263,8 @@ class Line extends Node {
 				case 'insn':
 					this.adoptChild(new Instruction(l.stmt));
 					break;
+				case 'setpc':
+					this.adoptChild(new SetPC(l.stmt));
 			}
 		}
 	}
@@ -271,25 +277,83 @@ export class Label extends Node {
 	}
 }
 
-class Instruction extends Node {
-	constructor(si: rcasm.StmtInsn) {
-		super(si, NodeType.Instruction);
-		const addParam = (p: rcasm.Operand) => {
-			switch (p.type) {
-				case 'qualified-ident':
-					this.adoptChild(new LabelRef(p));
-			}
-		};
-		if (si.p1) { addParam(si.p1); }
-		if (si.p2) { addParam(si.p2); }
+//#region Pseudos
+
+export class SetPC extends Node {
+
+	public pcExpr: Expr;
+
+	constructor(spc: rcasm.StmtSetPC) {
+		super(spc, NodeType.SetPC);
+		this.pcExpr = this.adoptChild(new Expr(spc.pc));
 	}
 }
+
+export class Expr extends Node {
+	constructor(e: rcasm.Expr) {
+		super(e, NodeType.Expr);
+	}
+}
+
+//#endregion
+
+//#region Instructions 
+
+export class Instruction extends Node {
+
+	public mnemonic: string;
+	public p1?: Operand;
+	public p2?: Operand;
+
+	constructor(si: rcasm.StmtInsn) {
+		super(si, NodeType.Instruction);
+		const addParam = (p: rcasm.Operand): Node | undefined => {
+			switch (p.type) {
+				case 'literal':
+					return this.adoptChild(new Literal(p));
+				case 'register':
+					return this.adoptChild(new Register(p));
+				case 'qualified-ident':
+					return this.adoptChild(new LabelRef(p));
+				default:
+					return undefined;
+			}
+		};
+		this.mnemonic = si.mnemonic.toLowerCase();
+		if (si.p1) { this.p1 = addParam(si.p1); }
+		if (si.p2) { this.p2 = addParam(si.p2); }
+	}
+}
+
+export type Operand = LabelRef | Literal | Register;
 
 export class LabelRef extends Node {
 	constructor(sqi: rcasm.ScopeQualifiedIdent) {
 		super(sqi, NodeType.LabelRef);
 	}
 }
+
+export class Literal extends Node {
+
+	public value: number;
+
+	constructor(l: rcasm.Literal) {
+		super(l, NodeType.Literal);
+		this.value = l.value;
+	}
+}
+
+export class Register extends Node {
+
+	public value: string;
+
+	constructor(r: rcasm.Register) {
+		super(r, NodeType.Register);
+		this.value = r.value.toUpperCase();
+	}
+}
+
+//#endregion 
 
 export interface IVisitor {
 	visitNode: (node: Node) => boolean;

@@ -8,11 +8,11 @@ export function assertHover(value: string, expectedHoverContent: MarkupContent |
 	value = value.slice(0, offset) + value.slice(offset + 1);
 
 	const document = TextDocument.create('test://test/test.rcasm', 'rcasm', 0, value);
-
+	let ls = getLanguageService();
+	let program = ls.parseProgram(document);
 	const position = document.positionAt(offset);
-	const ls = getLanguageService();
 
-	const hover = ls.doHover(document, position);
+	const hover = ls.doHover(document, position, program);
 	assert.deepStrictEqual(hover && hover.contents, expectedHoverContent);
 	assert.strictEqual(hover && document.offsetAt(hover.range!.start), expectedHoverOffset);
 }
@@ -60,6 +60,10 @@ suite('Instruction Hover', () => {
 		assertHover('ldi| a,11', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`A = 11`' }, 0);
 		assertHover('ldi| m,0xFEDC', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`M = 0xFEDC`' }, 0);
 		assertHover('ldi| j,label', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`J = (label)`' }, 0);
+	});
+
+	test('ORG', function (): any {
+		assertHover('org| 0xFEDC', { kind: 'markdown', value: 'Set Program Counter [PSEUDO]\n\n`PC = 0xFEDC`' }, 0);
 	});
 
 	test('Branching', function (): any {

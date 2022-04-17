@@ -151,7 +151,7 @@ export const rcasmData: RCASMDataV1 = {
 		},
 		{
 			"name": "opc",
-			"class": undefined,
+			"class": "PSEUDO",
 			"summary": "Literal Opcode",
 			"snippet": "opc ${1:opcode}",
 			"description": "Performs the given machine opcode directly.",
@@ -173,5 +173,13 @@ export const rcasmData: RCASMDataV1 = {
 			"synopsis": "{0} = <<B",
 			"syntax": "[ a | d ]"
 		},
+		{
+			"name": "org",
+			"class": "PSEUDO",
+			"summary": "Set Program Counter",
+			"description": "Sets the program counter to the given address such that the following instructions start from that location.",
+			"synopsis": "PC = {0}",
+			"syntax": "<value>{0x0000,0xFFFF}"
+		}
 	]
 };
