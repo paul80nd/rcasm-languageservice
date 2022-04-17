@@ -66,6 +66,18 @@ suite('Instruction Hover', () => {
 		assertHover('org| 0xFEDC', { kind: 'markdown', value: 'Set Program Counter [PSEUDO]\n\n`PC = 0xFEDC`' }, 0);
 	});
 
+	test('DFB', function (): any {
+		assertHover('dfb| 0xFE', { kind: 'markdown', value: 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`' }, 0);
+		assertHover('dfb| 0xFE, 123', { kind: 'markdown', value: 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`' }, 0);
+		assertHover('dfb| "test"', { kind: 'markdown', value: 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`' }, 0);
+	});
+
+	test('DFW', function (): any {
+		assertHover('dfw| 0xFEDC', { kind: 'markdown', value: 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`' }, 0);
+		assertHover('dfw| 0xFEDC, 213123', { kind: 'markdown', value: 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`' }, 0);
+		assertHover('dfw| "test"', { kind: 'markdown', value: 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`' }, 0);
+	});
+
 	test('Branching', function (): any {
 		assertHover('jm|p label1', { kind: 'markdown', value: 'Jump to Label [GOTO]\n\n`PC = (label1)`' }, 0);
 		assertHover('jsr |label2', { kind: 'markdown', value: 'Call Subroutine (Jump and Link) [GOTO]\n\n`XY = PC, PC = (label2)`' }, 0);

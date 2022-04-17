@@ -180,6 +180,20 @@ export const rcasmData: RCASMDataV1 = {
 			"description": "Sets the program counter to the given address such that the following instructions start from that location.",
 			"synopsis": "PC = {0}",
 			"syntax": "<value>{0x0000,0xFFFF}"
+		},
+		{
+			"name": "dfb",
+			"class": "PSEUDO",
+			"summary": "Define Byte Data",
+			"description": "Writes the given 8-bit values directly into the output starting from current location.",
+			"syntax": "<value>{0x00,0xFF} [ ,...n ]"
+		},
+		{
+			"name": "dfw",
+			"class": "PSEUDO",
+			"summary": "Define Word Data",
+			"description": "Writes the given 16-bit values directly into the output starting from current location.",
+			"syntax": "<value>{0x0000,0xFFFF} [ ,...n ]"
 		}
 	]
 };

@@ -11,7 +11,8 @@ export enum NodeType {
 	Literal,
 	Register,
 	SetPC,
-	Expr
+	Expr,
+	Data
 }
 
 export enum ReferenceType {
@@ -265,6 +266,9 @@ class Line extends Node {
 					break;
 				case 'setpc':
 					this.adoptChild(new SetPC(l.stmt));
+					break;
+				case 'data':
+					this.adoptChild(new Data(l.stmt));
 			}
 		}
 	}
@@ -286,6 +290,12 @@ export class SetPC extends Node {
 	constructor(spc: rcasm.StmtSetPC) {
 		super(spc, NodeType.SetPC);
 		this.pcExpr = this.adoptChild(new Expr(spc.pc));
+	}
+}
+
+export class Data extends Node {
+	constructor(d: rcasm.StmtData) {
+		super(d, NodeType.Data);
 	}
 }
 
