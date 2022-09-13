@@ -7,7 +7,7 @@ import { TextDocument } from '../rcasmLanguageTypes';
 /// <summary>
 /// A parser for rcasm (wraps rcasm parser).
 /// </summary>
-export class Parser {
+export class RCASMParser {
 
 	public parseProgram(textDocument: TextDocument): nodes.Program {
 		const versionId = textDocument.version;
