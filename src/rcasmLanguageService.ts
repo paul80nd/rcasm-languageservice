@@ -1,6 +1,6 @@
 'use strict';
 
-import { Parser } from './parser/rcasmParser';
+import { RCASMParser } from './parser/rcasmParser';
 import { RCASMCompletion } from './services/rcasmCompletion';
 import { RCASMHover } from './services/rcasmHover';
 import { RCASMNavigation } from './services/rcasmNavigation';
@@ -28,7 +28,7 @@ export interface LanguageService {
 }
 
 export function getLanguageService(options?: LanguageServiceOptions): LanguageService {
-	const parser = new Parser();
+	const parser = new RCASMParser();
 	const hover = new RCASMHover(options && options.clientCapabilities);
 	const completion = new RCASMCompletion(options && options.clientCapabilities);
 	const navigation = new RCASMNavigation();

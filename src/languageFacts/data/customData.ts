@@ -79,7 +79,7 @@ export const rcasmData: RCASMDataV1 = {
 			"summary": "Zero Value",
 			"description": "Clears the content (=0) of a given 8-bit register.",
 			"synopsis": "{0} = 0",
-			"syntax": "<target>{a,d}"
+			"syntax": "<target>{a,d|m1|m2|x|y}"
 		},
 		{
 			"name": "cmp",
@@ -139,7 +139,7 @@ export const rcasmData: RCASMDataV1 = {
 			"snippet": "mov ${1:b},${2:a}",
 			"description": "Copies the content of one 8-bit register to another.",
 			"synopsis": "{0} = {1}",
-			"syntax": "<destination>{a,d} , <source>{a,d}"
+			"syntax": "<destination>{a,d|m1|m2|x|y} , <source>{a,d|m1|m2|x|y}"
 		},
 		{
 			"name": "not",
