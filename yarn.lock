@@ -52,10 +52,12 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@paul80nd/rcasm@^1.0.5":
-  version "1.0.5"
-  resolved "https://npm.pkg.github.com/download/@paul80nd/rcasm/1.0.5/bb5a4e05397036dc3b2a923d1a209843364da77c2bc6c1881718ec962468bbe4#63db6ab8d4ed57f96a11067f51aebb983e3e7809"
-  integrity sha512-dDv1xsMLbzQ7ntnzQgUI/4JTYyIUVpDFLSrHxn3YJNxnxkx0MO4dMTIF2eEG/DAUYk1iays/Erz4oEiu3a72AQ==
+"@paul80nd/rcasm@^1.1.0":
+  version "1.1.0"
+  resolved "https://npm.pkg.github.com/download/@paul80nd/rcasm/1.1.0/44231e4f1c4d26be4a3dc3935ed90933a251f521#44231e4f1c4d26be4a3dc3935ed90933a251f521"
+  integrity sha512-CK9EJZcSsCbU8u/VV7bz//PhOgT3nuMtKPUXhakgn4/B3vP7gN4wM/wkD2UssYZ/92Z3EadXISnYsETAzgcEmQ==
+  dependencies:
+    fastbitset "^0.2.8"
 
 "@types/json-schema@^7.0.9":
   version "7.0.11"
@@ -510,6 +512,11 @@ fast-levenshtein@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
+
+fastbitset@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/fastbitset/-/fastbitset-0.2.8.tgz#4c131f3c71e9f327404aa45ae1c1a2fa1ae14204"
+  integrity sha512-OT0+4y2vxtkmvbxwfM3jbsylIQmB9xtgzraAiBcAz3xDLUG5Y1DwZrQNeKWt7myPsB5rHwdzenFXQq7YR+jMTQ==
 
 fastq@^1.6.0:
   version "1.13.0"
