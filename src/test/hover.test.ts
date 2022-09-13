@@ -49,9 +49,15 @@ suite('Instruction Hover', () => {
 		assertHover('mov| q,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`(q) = C`' }, 0);
 	});
 
+	test('CLR', function (): any {
+		assertHover('clr| c', { kind: 'markdown', value: 'Zero Value [MOV8]\n\n`C = 0`' }, 0);
+		assertHover('clr y|', { kind: 'markdown', value: 'Zero Value [MOV8]\n\n`Y = 0`' }, 0);
+	});
+
 	test('MOV', function (): any {
 		assertHover('mov| b,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`B = C`' }, 0);
 		assertHover('mov a|,d', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`A = D`' }, 0);
+		assertHover('mov m1,|x', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`M1 = X`' }, 0);
 	});
 
 	test('LDI', function (): any {
