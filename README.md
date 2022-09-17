@@ -8,9 +8,10 @@ Why?
 ----
 
 The _rcasm-languageservice_ contains the language smarts behind the Relay Computer Assembly editing experience of Visual Studio Code and the Monaco editor.
+
  - *doValidation* analyses an input string and returns syntax and lint errors.
  - *doComplete* provides completion proposals for a given location.
- - *doHover* provides a hover text for a given location.
+ - *doHover* provides hover information at a given location.
  - *findDefinition* finds the definition of the symbol at the given location.
  - *findReferences* finds all references to the symbol at the given location.
  - *findDocumentHighlights* finds all symbols connected to the given location.
@@ -20,15 +21,15 @@ The _rcasm-languageservice_ contains the language smarts behind the Relay Comput
  - *doRename* renames all symbols connected to the given location.
   - *getFoldingRanges* returns folding ranges in the given document.
 
+ For the complete API see [rcasmLanguageService.ts](./src/rcasmLanguageService.ts) and [rcasmLanguageTypes.ts](./src/rcasmLanguageTypes.ts) 
+
 Installation
 ------------
 
     npm install --save @paul80nd/vscode-rcasm-languageservice
 
-
 Development
 -----------
-
 
 - clone this repo, run yarn
 - `yarn test` to compile and run tests
@@ -45,4 +46,4 @@ License
 (MIT License)
 
 Based on vscode-html-languageservice:
-Copyright 2016, 20 Microsoft
+Copyright 2016-2020, Microsoft
