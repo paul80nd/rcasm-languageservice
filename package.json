@@ -1,7 +1,7 @@
 {
   "name": "@paul80nd/rcasm-languageservice",
-  "version": "5.5.0",
-  "description": "Language services for Relay Computer Assembly",
+  "version": "5.5.1",
+  "description": "Language service for Relay Computer Assembly",
   "main": "./lib/umd/rcasmLanguageService.js",
   "typings": "./lib/umd/rcasmLanguageService",
   "module": "./lib/esm/rcasmLanguageService.js",
@@ -26,7 +26,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@paul80nd/rcasm": "^1.1.0",
+    "@paul80nd/rcasm": "^1.2.0",
     "vscode-languageserver-textdocument": "^1.0.4",
     "vscode-languageserver-types": "^3.17.1",
     "vscode-nls": "^5.0.1",
@@ -34,12 +34,12 @@
   },
   "scripts": {
     "prepublishOnly": "npm run clean && npm run compile-esm && npm run test && npm run remove-sourcemap-refs",
-    "compile": "tsc -p ./src && npm run lint",
+    "compile": "tsc -p ./src",
     "compile-esm": "tsc -p ./src/tsconfig.esm.json",
     "clean": "rimraf lib",
     "remove-sourcemap-refs": "node ./build/remove-sourcemap-refs.js",
     "watch": "tsc -w -p ./src",
-    "test": "npm run compile && mocha ./lib/umd/test/*.js",
+    "test": "npm run compile && mocha ./lib/umd/test/*.js && npm run lint",
     "lint": "eslint src/**/*.ts",
     "install-types-next": "yarn add vscode-languageserver-types@next -f -S && yarn add vscode-languageserver-textdocument@next -f -S",
     "preversion": "npm test",
