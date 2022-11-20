@@ -106,6 +106,22 @@ export const rcasmData: RCASMDataV1 = {
 			"syntax": "[ a | d ]"
 		},
 		{
+			"name": "hlt",
+			"class": "MISC",
+			"summary": "Halt",
+			"description": "Halts execution of the program",
+			"synopsis": "PC = PC + 1",
+			"syntax": "<label>"
+		},
+		{
+			"name": "hlr",
+			"class": "MISC",
+			"summary": "Halt and Reload",
+			"description": "Halts execution of the program and sets the program counter from the address switches",
+			"synopsis": "PC = AS",
+			"syntax": "<label>"
+		},
+		{
 			"name": "jmp",
 			"class": "GOTO",
 			"summary": "Jump to Label",
