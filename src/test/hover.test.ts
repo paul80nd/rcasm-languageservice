@@ -60,6 +60,11 @@ suite('Instruction Hover', () => {
 		assertHover('mov m1,|x', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`M1 = X`' }, 0);
 	});
 
+	test('HLT', function (): any {
+		assertHover('hlt|', { kind: 'markdown', value: 'Halt [MISC]\n\n`PC = PC + 1`' }, 0);
+		assertHover('hlr|', { kind: 'markdown', value: 'Halt and Reload [MISC]\n\n`PC = AS`' }, 0);
+	});
+
 	test('LDI', function (): any {
 		assertHover('ldi| a,0', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`A = 0`' }, 0);
 		assertHover('ldi| b,-5', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`B = -5`' }, 0);

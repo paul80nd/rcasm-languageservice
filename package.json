@@ -1,6 +1,6 @@
 {
   "name": "@paul80nd/rcasm-languageservice",
-  "version": "5.5.1",
+  "version": "5.6.1",
   "description": "Language service for Relay Computer Assembly",
   "main": "./lib/umd/rcasmLanguageService.js",
   "typings": "./lib/umd/rcasmLanguageService",
@@ -17,32 +17,30 @@
   "devDependencies": {
     "@types/mocha": "^9.1.1",
     "@types/node": "16.x",
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
-    "@typescript-eslint/parser": "^5.25.0",
-    "@vscode/web-custom-data": "^0.3.10",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
+    "@vscode/web-custom-data": "^0.4.2",
     "eslint": "^8.15.0",
     "mocha": "^10.0.0",
     "rimraf": "^3.0.2",
-    "typescript": "^4.5.5"
+    "typescript": "^4.8.3"
   },
   "dependencies": {
-    "@paul80nd/rcasm": "^1.2.0",
-    "vscode-languageserver-textdocument": "^1.0.4",
-    "vscode-languageserver-types": "^3.17.1",
-    "vscode-nls": "^5.0.1",
-    "vscode-uri": "^3.0.3"
+    "@paul80nd/rcasm": "^1.4.0",
+    "@vscode/l10n": "^0.0.8",
+    "vscode-languageserver-textdocument": "^1.0.7",
+    "vscode-languageserver-types": "^3.17.2",
+    "vscode-uri": "^3.0.4"
   },
   "scripts": {
-    "prepublishOnly": "npm run clean && npm run compile-esm && npm run test && npm run remove-sourcemap-refs",
+    "prepack": "npm run clean && npm run compile-esm && npm run test && npm run remove-sourcemap-refs",
     "compile": "tsc -p ./src",
     "compile-esm": "tsc -p ./src/tsconfig.esm.json",
+    "watch": "tsc -w -p ./src",
     "clean": "rimraf lib",
     "remove-sourcemap-refs": "node ./build/remove-sourcemap-refs.js",
-    "watch": "tsc -w -p ./src",
     "test": "npm run compile && mocha ./lib/umd/test/*.js && npm run lint",
     "lint": "eslint src/**/*.ts",
-    "install-types-next": "yarn add vscode-languageserver-types@next -f -S && yarn add vscode-languageserver-textdocument@next -f -S",
-    "preversion": "npm test",
-    "postversion": "git push && git push --tags"
+    "install-types-next": "yarn add vscode-languageserver-types@next -f -S && yarn add vscode-languageserver-textdocument@next -f -S"
   }
 }

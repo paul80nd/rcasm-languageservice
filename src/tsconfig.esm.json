@@ -5,11 +5,11 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "declaration": true,
-        "strict": true,
         "stripInternal": true,
         "outDir": "../lib/esm",
         "lib": [
             "es2020"
-        ]
+        ],
+        "strict": true
     }
 }
