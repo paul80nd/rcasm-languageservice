@@ -140,6 +140,13 @@ export const rcasmData: RCASMDataV1 = {
 			"syntax": "<label>"
 		},
 		{
+			"name": "rts",
+			"class": "MOV16",
+			"summary": "Return from Subroutine",
+			"description": "Jumps back from a jsr call.",
+			"synopsis": "PC = XY"
+		},
+		{
 			"name": "ldi",
 			"class": "SETAB",
 			"summary": "Load Immediate",
