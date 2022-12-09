@@ -42,11 +42,11 @@ suite('Instruction Hover', () => {
 	});
 
 	test('Bad Params', function (): any {
-		assertHover('mov|', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`? = ?`' }, 0);
+		assertHover('mov|', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`? = ?`' }, 0);
 		assertHover('mov| ,b', null, null);
 		assertHover('mov| a,', null, null);
 		assertHover('mov| q,', null, null);
-		assertHover('mov| q,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`(q) = C`' }, 0);
+		assertHover('mov| q,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`(q) = C`' }, 0);
 	});
 
 	test('CLR', function (): any {
@@ -55,9 +55,11 @@ suite('Instruction Hover', () => {
 	});
 
 	test('MOV', function (): any {
-		assertHover('mov| b,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`B = C`' }, 0);
-		assertHover('mov a|,d', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`A = D`' }, 0);
-		assertHover('mov m1,|x', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`M1 = X`' }, 0);
+		assertHover('mov| b,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`B = C`' }, 0);
+		assertHover('mov a|,d', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`A = D`' }, 0);
+		assertHover('mov m1,|x', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`M1 = X`' }, 0);
+		assertHover('mov xy,|j', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`XY = J`' }, 0);
+		assertHover('mov xy,a|s', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`XY = AS`' }, 0);
 	});
 
 	test('HLT', function (): any {
@@ -71,6 +73,12 @@ suite('Instruction Hover', () => {
 		assertHover('ldi| a,11', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`A = 11`' }, 0);
 		assertHover('ldi| m,0xFEDC', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`M = 0xFEDC`' }, 0);
 		assertHover('ldi| j,label', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`J = (label)`' }, 0);
+	});
+
+	test('LDS', function (): any {
+		assertHover('lds|', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`? = DS`' }, 0);
+		assertHover('lds| a', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`A = DS`' }, 0);
+		assertHover('lds| d', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`D = DS`' }, 0);
 	});
 
 	test('ORG', function (): any {
