@@ -77,9 +77,9 @@ export const rcasmData: RCASMDataV1 = {
 			"name": "clr",
 			"class": "MOV8",
 			"summary": "Zero Value",
-			"description": "Clears the content (=0) of a given 8-bit register.",
+			"description": "Clears the content (=0) of a given register.",
 			"synopsis": "{0} = 0",
-			"syntax": "<target>{a,d|m1|m2|x|y}"
+			"syntax": "<target>{a,d|m1|m2|x|y|xy}"
 		},
 		{
 			"name": "cmp",
@@ -150,12 +150,12 @@ export const rcasmData: RCASMDataV1 = {
 		},
 		{
 			"name": "mov",
-			"class": "MOV8",
+			"class": "MOV8|MOV16",
 			"summary": "Copy Register to Register",
 			"snippet": "mov ${1:b},${2:a}",
-			"description": "Copies the content of one 8-bit register to another.",
+			"description": "Copies the content of one register to another.",
 			"synopsis": "{0} = {1}",
-			"syntax": "<destination>{a,d|m1|m2|x|y} , <source>{a,d|m1|m2|x|y}"
+			"syntax": "[ <destination>{a,d|m1|m2|x|y} , <source>{a,d|m1|m2|x|y} | <destination>{xy|pc} , <source>{m|xy|j|as} ]"
 		},
 		{
 			"name": "not",

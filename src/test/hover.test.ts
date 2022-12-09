@@ -42,11 +42,11 @@ suite('Instruction Hover', () => {
 	});
 
 	test('Bad Params', function (): any {
-		assertHover('mov|', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`? = ?`' }, 0);
+		assertHover('mov|', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`? = ?`' }, 0);
 		assertHover('mov| ,b', null, null);
 		assertHover('mov| a,', null, null);
 		assertHover('mov| q,', null, null);
-		assertHover('mov| q,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`(q) = C`' }, 0);
+		assertHover('mov| q,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`(q) = C`' }, 0);
 	});
 
 	test('CLR', function (): any {
@@ -55,9 +55,11 @@ suite('Instruction Hover', () => {
 	});
 
 	test('MOV', function (): any {
-		assertHover('mov| b,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`B = C`' }, 0);
-		assertHover('mov a|,d', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`A = D`' }, 0);
-		assertHover('mov m1,|x', { kind: 'markdown', value: 'Copy Register to Register [MOV8]\n\n`M1 = X`' }, 0);
+		assertHover('mov| b,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`B = C`' }, 0);
+		assertHover('mov a|,d', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`A = D`' }, 0);
+		assertHover('mov m1,|x', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`M1 = X`' }, 0);
+		assertHover('mov xy,|j', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`XY = J`' }, 0);
+		assertHover('mov xy,a|s', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`XY = AS`' }, 0);
 	});
 
 	test('HLT', function (): any {
