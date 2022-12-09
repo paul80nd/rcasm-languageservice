@@ -75,6 +75,12 @@ suite('Instruction Hover', () => {
 		assertHover('ldi| j,label', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`J = (label)`' }, 0);
 	});
 
+	test('LDS', function (): any {
+		assertHover('lds|', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`? = DS`' }, 0);
+		assertHover('lds| a', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`A = DS`' }, 0);
+		assertHover('lds| d', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`D = DS`' }, 0);
+	});
+
 	test('ORG', function (): any {
 		assertHover('org| 0xFEDC', { kind: 'markdown', value: 'Set Program Counter [PSEUDO]\n\n`PC = 0xFEDC`' }, 0);
 	});

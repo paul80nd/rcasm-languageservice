@@ -122,6 +122,14 @@ export const rcasmData: RCASMDataV1 = {
 			"syntax": "<label>"
 		},
 		{
+			"name": "lds",
+			"class": "MISC",
+			"summary": "Load Switches",
+			"description": "Takes the 8-bit value on the main switches and loads register A or D.",
+			"synopsis": "{0} = DS",
+			"syntax": "[ a | d ]"
+		},
+		{
 			"name": "jmp",
 			"class": "GOTO",
 			"summary": "Jump to Label",
