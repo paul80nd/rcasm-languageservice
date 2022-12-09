@@ -45,7 +45,7 @@ suite('RCASM - Validate', () => {
 		assertDiagnostic('clr', 'Parameter required', 0, 0, 0, 3);
 		assertDiagnostic('clr 45', 'Register required', 0, 4, 0, 6);
 		assertDiagnostic('clr g', 'Register required', 0, 4, 0, 5);
-		assertDiagnostic('clr j1', 'Invalid register - choose one of [a|b|c|d|m1|m2|x|y]', 0, 4, 0, 6);
+		assertDiagnostic('clr j1', 'Invalid register - choose one of [a|b|c|d|m1|m2|x|y] or [xy]', 0, 4, 0, 6);
 		assertDiagnostic('clr a,b', 'Parameter not required', 0, 6, 0, 7, DiagnosticSeverity.Warning);
 	});
 
@@ -54,7 +54,7 @@ suite('RCASM - Validate', () => {
 		assertDiagnostic('mov a', 'Two parameters required', 0, 0, 0, 5);
 		assertDiagnostic('mov 45,a', 'Register required', 0, 4, 0, 6);
 		assertDiagnostic('mov g,a', 'Register required', 0, 4, 0, 5);
-		assertDiagnostic('mov j1,a', 'Invalid register - choose one of [a|b|c|d|m1|m2|x|y]', 0, 4, 0, 6);
+		assertDiagnostic('mov j1,a', 'Invalid register - choose one of [a|b|c|d|m1|m2|x|y] or [xy|pc]', 0, 4, 0, 6);
 		assertDiagnostic('mov a,45', 'Register required', 0, 6, 0, 8);
 		assertDiagnostic('mov a,g', 'Register required', 0, 6, 0, 7);
 		assertDiagnostic('mov a,j2', 'Invalid register - choose one of [a|b|c|d|m1|m2|x|y]', 0, 6, 0, 8);
@@ -73,7 +73,7 @@ suite('RCASM - Validate', () => {
 		assertDiagnostic('ldi 56,0', 'Register required', 0, 4, 0, 6);
 		assertDiagnostic('ldi a,g', 'Undefined symbol \'g\'', 0, 6, 0, 7);
 		assertDiagnostic('ldi g,3', 'Register required', 0, 4, 0, 5);
-		assertDiagnostic('ldi x,3', 'Invalid register - choose one of [a|b|m|j]', 0, 4, 0, 5);
+		assertDiagnostic('ldi x,3', 'Invalid register - choose one of [a|b] or [m|j]', 0, 4, 0, 5);
 		assertDiagnostic('ldi a,16', 'Literal out of range (must be between -16 and 15)', 0, 6, 0, 8);
 		assertDiagnostic('ldi a,-17', 'Literal out of range (must be between -16 and 15)', 0, 6, 0, 9);
 	});
