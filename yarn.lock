@@ -74,10 +74,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@paul80nd/rcasm@^1.6.0":
-  version "1.6.0"
-  resolved "https://npm.pkg.github.com/download/@paul80nd/rcasm/1.6.0/ea90d8c4bb1d21c91d6b03d66c5022e355539c46#ea90d8c4bb1d21c91d6b03d66c5022e355539c46"
-  integrity sha512-GvfV4Sj/Co5DrH4FfBXEPUP0aquNHc5tgaLZDAXOYSb/n0vlaFON1ErxXKzxGE2RgZSk/PS1NGdjC+HbKRwtAw==
+"@paul80nd/rcasm@^1.6.1":
+  version "1.6.1"
+  resolved "https://npm.pkg.github.com/download/@paul80nd/rcasm/1.6.1/727a783c4146c75ab6677727ba33bd5b32e7862b#727a783c4146c75ab6677727ba33bd5b32e7862b"
+  integrity sha512-qmqcvHKcK8TfrvKU4Bd0a/BbasEQIFuTVmOStfLCRzK+DQLhx273ppW6WocR3H0jzilt/BBEhvpJ8uzlsH0j2Q==
   dependencies:
     fastbitset "^0.4.0"
 
