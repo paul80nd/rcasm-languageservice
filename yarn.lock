@@ -190,10 +190,10 @@
   resolved "https://registry.yarnpkg.com/@vscode/l10n/-/l10n-0.0.11.tgz#325d7beb2cfb87162bc624d16c4d546de6a73b72"
   integrity sha512-ukOMWnCg1tCvT7WnDfsUKQOFDQGsyR5tNgRpwmqi+5/vzU3ghdDXzvIM4IOPdSb3OeSsBNvmSL8nxIVOqi2WXA==
 
-"@vscode/web-custom-data@^0.4.4":
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/@vscode/web-custom-data/-/web-custom-data-0.4.4.tgz#1a8ee643c8ed238d3fc8ecf78b647dc16f639e17"
-  integrity sha512-wg8DEYPrNhUozC+FVuuqWP2ySjmuyX+5hP0qoXY/H12UYeGy9z1SqOSmOX4e7XFKGyK5a4xIhmEWU9jgPPTAHg==
+"@vscode/web-custom-data@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@vscode/web-custom-data/-/web-custom-data-0.4.5.tgz#6b23e51e4cddce4676898123ba88d3c06e047371"
+  integrity sha512-Y8+St3PKq1qTEus70mdtW+dodu1lueYhJubEoWVRrdyjacEIlLKRok/Op4y0E8T48etC5FokzPOqQzoWgtDG/Q==
 
 acorn-jsx@^5.3.2:
   version "5.3.2"
