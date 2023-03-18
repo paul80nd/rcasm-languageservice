@@ -1,6 +1,6 @@
 {
   "name": "@paul80nd/rcasm-languageservice",
-  "version": "5.6.3",
+  "version": "5.6.4",
   "description": "Language service for Relay Computer Assembly",
   "main": "./lib/umd/rcasmLanguageService.js",
   "typings": "./lib/umd/rcasmLanguageService",
@@ -17,20 +17,20 @@
   "devDependencies": {
     "@types/mocha": "^10.0.0",
     "@types/node": "16.x",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
-    "@vscode/web-custom-data": "^0.4.4",
-    "eslint": "^8.28.0",
-    "mocha": "^10.1.0",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.9.3"
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "@vscode/web-custom-data": "^0.4.5",
+    "eslint": "^8.36.0",
+    "mocha": "^10.2.0",
+    "rimraf": "^4.4.0",
+    "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@paul80nd/rcasm": "^1.6.0",
-    "@vscode/l10n": "^0.0.10",
-    "vscode-languageserver-textdocument": "^1.0.7",
+    "@paul80nd/rcasm": "^1.6.1",
+    "@vscode/l10n": "^0.0.11",
+    "vscode-languageserver-textdocument": "^1.0.8",
     "vscode-languageserver-types": "^3.17.2",
-    "vscode-uri": "^3.0.6"
+    "vscode-uri": "^3.0.7"
   },
   "scripts": {
     "prepack": "npm run clean && npm run compile-esm && npm run test && npm run remove-sourcemap-refs",
