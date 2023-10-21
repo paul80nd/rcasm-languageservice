@@ -103,7 +103,7 @@ export class RCASMHover {
 		}
 
 		if (param instanceof nodes.Literal) {
-			if (mnemonic.toLowerCase() === 'ldi' && param.value > 15) {
+			if (mnemonic.toLowerCase() === 'ldi' && +param.value > 15) {
 				return `0x${param.value.toString(16).toUpperCase()}`;
 			}
 			return param.value.toString();
