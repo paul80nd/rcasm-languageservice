@@ -98,12 +98,12 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@paul80nd/rcasm@^1.6.1":
-  version "1.6.1"
-  resolved "https://npm.pkg.github.com/download/@paul80nd/rcasm/1.6.1/727a783c4146c75ab6677727ba33bd5b32e7862b"
-  integrity sha512-qmqcvHKcK8TfrvKU4Bd0a/BbasEQIFuTVmOStfLCRzK+DQLhx273ppW6WocR3H0jzilt/BBEhvpJ8uzlsH0j2Q==
+"@paul80nd/rcasm@^1.6.2":
+  version "1.6.2"
+  resolved "https://npm.pkg.github.com/download/@paul80nd/rcasm/1.6.2/fb39968a89879f8467c10a8d5dbb8bd917619673#fb39968a89879f8467c10a8d5dbb8bd917619673"
+  integrity sha512-HTegVS5rxE4i9BIEoibCzsC7H93jSWN2yqIIb7Rcp15BtZYOVZmRxHDGETvE6+qcakkiaY7fFbhoSp7TobD3aw==
   dependencies:
-    fastbitset "^0.4.0"
+    fastbitset "^0.4.1"
 
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
@@ -599,10 +599,10 @@ fast-levenshtein@^2.0.6:
   resolved "https://registry.npmjs.org/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
 
-fastbitset@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.npmjs.org/fastbitset/-/fastbitset-0.4.0.tgz"
-  integrity sha512-dM2fcSsVL7VleMf/rG8R1pq6rdpD2kRYsNO+GcbEJiln/lOMx3uhVcnDgDa3eLQudaNidtYC0lQ99kzPooTstw==
+fastbitset@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/fastbitset/-/fastbitset-0.4.1.tgz#909db30facc2714646f706f8067a55249ffb6c27"
+  integrity sha512-QbHY1MNGq4A63g1Kuf0DhjlVlaT0GQiQBj1QMTR8TuxpU/+x0SBcNAM22J6NDxOnhP7MtDL248/nes8EURgLnQ==
   dependencies:
     bl "^4.0.3"
     minimist "^1.2.5"
