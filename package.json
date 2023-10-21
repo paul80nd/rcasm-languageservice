@@ -22,7 +22,7 @@
     "@vscode/web-custom-data": "^0.4.5",
     "eslint": "^8.41.0",
     "mocha": "^10.2.0",
-    "rimraf": "^5.0.0",
+    "rimraf": "^5.0.1",
     "typescript": "^5.0.4"
   },
   "dependencies": {
