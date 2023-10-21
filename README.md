@@ -45,4 +45,4 @@ License
 (MIT License)
 
 Based on vscode-html-languageservice:
-Copyright 2016-2020, Microsoft
+Copyright 2016-2023, Microsoft
