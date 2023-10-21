@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@paul80nd/rcasm": "^1.6.1",
-    "@vscode/l10n": "^0.0.11",
+    "@vscode/l10n": "^0.0.13",
     "vscode-languageserver-textdocument": "^1.0.8",
     "vscode-languageserver-types": "^3.17.2",
     "vscode-uri": "^3.0.7"
