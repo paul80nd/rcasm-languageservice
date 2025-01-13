@@ -21,7 +21,7 @@
     "@typescript-eslint/parser": "^6.9.0",
     "eslint": "^8.52.0",
     "mocha": "^10.2.0",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   },
   "dependencies": {
