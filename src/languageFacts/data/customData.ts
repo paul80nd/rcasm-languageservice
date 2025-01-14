@@ -122,12 +122,27 @@ export const rcasmData: RCASMDataV1 = {
 			"syntax": "<label>"
 		},
 		{
+			"name": "ixy",
+			"class": "INCXY",
+			"summary": "Increments contents of 16-bit register XY",
+			"synopsis": "XY = XY + 1"
+		},
+		{
 			"name": "lds",
 			"class": "MISC",
 			"summary": "Load Switches",
 			"description": "Takes the 8-bit value on the main switches and loads register A or D.",
 			"synopsis": "{0} = DS",
 			"syntax": "[ a | d ]"
+		},
+		{
+			"name": "ldr",
+			"class": "LOAD",
+			"summary": "Load Register from Memory",
+			"snippet": "ldr ${1:a}",
+			"description": "Loads the contents of memory at the address in register M into register A-D.",
+			"synopsis": "{0} = (M)",
+			"syntax": "[ a | b | c | d ]"
 		},
 		{
 			"name": "jmp",
@@ -205,6 +220,15 @@ export const rcasmData: RCASMDataV1 = {
 			"syntax": "[ a | d ]"
 		},
 		{
+			"name": "str",
+			"class": "STORE",
+			"summary": "Store Register into Memory",
+			"snippet": "str ${1:a}",
+			"description": "Stores the contents register A-D into memory at the address in register M.",
+			"synopsis": "(M) = {0}",
+			"syntax": "[ a | b | c | d ]"
+		},
+		{
 			"name": "org",
 			"class": "PSEUDO",
 			"summary": "Set Program Counter",
@@ -225,6 +249,13 @@ export const rcasmData: RCASMDataV1 = {
 			"summary": "Define Word Data",
 			"description": "Writes the given 16-bit values directly into the output starting from current location.",
 			"syntax": "<value>{0x0000,0xFFFF} [ ,...n ]"
+		},
+		{
+			"name": "dff",
+			"class": "PSEUDO",
+			"summary": "Define Fill Data",
+			"description": "Writes the given 8-bit value n times directly into the output starting from current location.",
+			"syntax": "<value>{0x00,0xFF} , <count>{0,255}"
 		}
 	]
 };
