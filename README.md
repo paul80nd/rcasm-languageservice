@@ -30,8 +30,8 @@ Installation
 Development
 -----------
 
-- clone this repo, run yarn
-- `yarn test` to compile and run tests
+- clone this repo, run `npm i`
+- `npm test` to compile and run tests
 
 How can I run and debug the service?
 
