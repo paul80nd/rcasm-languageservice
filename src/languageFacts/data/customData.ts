@@ -251,9 +251,9 @@ export const rcasmData: RCASMDataV1 = {
 			"syntax": "<value>{0x0000,0xFFFF} [ ,...n ]"
 		},
 		{
-			"name": "dff",
+			"name": "dfs",
 			"class": "PSEUDO",
-			"summary": "Define Fill Data",
+			"summary": "Define Fill Space",
 			"description": "Writes the given 8-bit value n times directly into the output starting from current location.",
 			"syntax": "<value>{0x00,0xFF} , <count>{0,255}"
 		}

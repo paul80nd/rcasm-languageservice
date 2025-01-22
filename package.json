@@ -1,6 +1,6 @@
 {
   "name": "@paul80nd/rcasm-languageservice",
-  "version": "5.8.2",
+  "version": "5.8.3",
   "description": "Language service for Relay Computer Assembly",
   "main": "./lib/umd/rcasmLanguageService.js",
   "typings": "./lib/umd/rcasmLanguageService",
@@ -25,7 +25,7 @@
     "typescript": "5.7.3"
   },
   "dependencies": {
-    "@paul80nd/rcasm": "^1.8.2",
+    "@paul80nd/rcasm": "1.8.3",
     "@vscode/l10n": "^0.0.18",
     "vscode-languageserver-textdocument": "^1.0.12",
     "vscode-languageserver-types": "^3.17.5",
