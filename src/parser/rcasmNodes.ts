@@ -277,7 +277,7 @@ class Line extends Node {
 export class Label extends Node {
 	constructor(l: rcasm.Label) {
 		super(l, NodeType.Label);
-		this.length--;	// ignore colon
+		this.length = l.name.length;	// Ignore colon and any whitespace
 	}
 
 	public getName(): string {

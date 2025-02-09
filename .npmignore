@@ -15,3 +15,4 @@ gulpfile.js
 .mocharc.json
 .eslintrc.json
 .editorconfig
+.npmrc
