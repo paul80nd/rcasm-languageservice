@@ -15,7 +15,6 @@ The _rcasm-languageservice_ contains the language smarts behind the Relay Comput
 - _findDocumentHighlights_ finds all symbols connected to the given location.
 - _findDocumentSymbols_ provides all symbols in the given document
 - _doCodeActions_ evaluates code actions for the given location, typically to fix a problem.
-- _findColorSymbols_ evaluates all color symbols in the given document
 - _doRename_ renames all symbols connected to the given location.
 - _getFoldingRanges* returns folding ranges in the given document.
 
