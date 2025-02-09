@@ -47,7 +47,7 @@ export function assertHighlights(ls: LanguageService, input: string, marker: str
 	assert.equal(nWrites, expectedWrites, input);
 }
 
-suite('RCASM Navigation', () => {
+suite('RCASM Symbols', () => {
 
 	test('basic label symbols', () => {
 		let ls = getLanguageService();
@@ -55,16 +55,19 @@ suite('RCASM Navigation', () => {
 		assertSymbolInfos(ls, 'label2: jmp label2', [{ name: 'label2', kind: SymbolKind.Variable, location: Location.create('test://test/test.rcasm', newRange(0, 6)) }]);
 	});
 
-	test('mark occurrences for label', () => {
-		let ls = getLanguageService();
-		assertHighlights(ls, 'label1: add', 'label1', 1, 1);
-		assertHighlights(ls, 'label2: jmp label2', 'label2', 2, 1);
-	});
-
 	test('basic document symbols', () => {
 		let ls = getLanguageService();
 		assertDocumentSymbols(ls, 'label1: add', [{ name: 'label1', kind: SymbolKind.Variable, range: newRange(0, 6), selectionRange: newRange(0, 6) }]);
 		assertDocumentSymbols(ls, 'label2: jmp label2', [{ name: 'label2', kind: SymbolKind.Variable, range: newRange(0, 6), selectionRange: newRange(0, 6) }]);
+	});
+});
+
+suite('RCASM Highlights', () => {
+
+	test('mark occurrences for label', () => {
+		let ls = getLanguageService();
+		assertHighlights(ls, 'label1: add', 'label1', 1, 1);
+		assertHighlights(ls, 'label2: jmp label2', 'label2', 2, 1);
 	});
 });
 

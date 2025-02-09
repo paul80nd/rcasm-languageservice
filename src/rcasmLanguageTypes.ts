@@ -4,9 +4,11 @@ import {
 	Range, Position, MarkupContent, MarkupKind,
 	Diagnostic, DiagnosticSeverity,
 	CompletionList,
-	InsertTextFormat,
-	SymbolInformation, SymbolKind, Location, Hover, MarkedString,
-	DocumentHighlight, DocumentSymbol, DocumentHighlightKind
+	InsertTextFormat, Location, Hover, MarkedString,
+	SymbolInformation, SymbolKind,
+	DocumentHighlight, DocumentHighlightKind, DocumentSymbol,
+	TextEdit,
+	WorkspaceEdit
 } from 'vscode-languageserver-types';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -16,9 +18,11 @@ export {
 	Range, Position, MarkupContent, MarkupKind,
 	Diagnostic, DiagnosticSeverity,
 	CompletionList,
-	InsertTextFormat,
-	SymbolInformation, SymbolKind, Location, Hover, MarkedString,
-	DocumentHighlight, DocumentSymbol, DocumentHighlightKind
+	InsertTextFormat, Location, Hover, MarkedString,
+	SymbolInformation, SymbolKind,
+	DocumentHighlight, DocumentHighlightKind, DocumentSymbol,
+	TextEdit,
+	WorkspaceEdit
 };
 
 export interface LanguageSettings {

@@ -10,8 +10,7 @@ import {
 	RCASMProgram,
 	LanguageSettings, LanguageServiceOptions,
 	Diagnostic, DocumentSymbol, Position, CompletionList, Hover, Location, DocumentHighlight,
-	SymbolInformation,
-	TextDocument
+	SymbolInformation, Range, WorkspaceEdit, TextDocument
 } from './rcasmLanguageTypes';
 
 export * from './rcasmLanguageTypes';
@@ -26,6 +25,8 @@ export interface LanguageService {
 	findDocumentHighlights(document: TextDocument, position: Position, program: RCASMProgram): DocumentHighlight[];
 	findDocumentSymbols(document: TextDocument, program: RCASMProgram): SymbolInformation[];
 	findDocumentSymbols2(document: TextDocument, program: RCASMProgram): DocumentSymbol[];
+	prepareRename(document: TextDocument, position: Position, program: RCASMProgram): Range | undefined;
+	doRename(document: TextDocument, position: Position, newName: string, program: RCASMProgram): WorkspaceEdit;
 }
 
 export function getLanguageService(options?: LanguageServiceOptions): LanguageService {
@@ -45,5 +46,7 @@ export function getLanguageService(options?: LanguageServiceOptions): LanguageSe
 		findDocumentHighlights: navigation.findDocumentHighlights.bind(navigation),
 		findDocumentSymbols: navigation.findSymbolInformations.bind(navigation),
 		findDocumentSymbols2: navigation.findDocumentSymbols.bind(navigation),
+		prepareRename: navigation.prepareRename.bind(navigation),
+		doRename: navigation.doRename.bind(navigation)
 	};
 }

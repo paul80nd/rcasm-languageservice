@@ -16,6 +16,7 @@ The _rcasm-languageservice_ contains the language smarts behind the Relay Comput
 - _findDocumentSymbols_ provides all symbols in the given document
 - _doCodeActions_ evaluates code actions for the given location, typically to fix a problem.
 - _doRename_ renames all symbols connected to the given location.
+- _prepareRename_ the range of the node that can be renamed.
 - _getFoldingRanges* returns folding ranges in the given document.
 
  For the complete API see [rcasmLanguageService.ts](./src/rcasmLanguageService.ts) and [rcasmLanguageTypes.ts](./src/rcasmLanguageTypes.ts)

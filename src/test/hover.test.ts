@@ -17,7 +17,7 @@ export function assertHover(value: string, expectedHoverContent: MarkupContent |
 	assert.strictEqual(hover && document.offsetAt(hover.range!.start), expectedHoverOffset);
 }
 
-suite('Instruction Hover', () => {
+suite('RCASM Hover', () => {
 	test('Simple Position', () => {
 		const addContent: MarkupContent = {
 			kind: 'markdown',

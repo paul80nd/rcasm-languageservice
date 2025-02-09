@@ -1,8 +1,10 @@
 'use strict';
 
 import {
-	DocumentHighlight, DocumentHighlightKind, Location,
-	Position, Range, SymbolInformation, SymbolKind, TextDocument, DocumentSymbol
+	DocumentHighlight, DocumentHighlightKind, DocumentSymbol,
+	Location, Position, Range, SymbolInformation, SymbolKind,
+	TextDocument, TextEdit,
+	WorkspaceEdit
 } from '../rcasmLanguageTypes';
 import * as nodes from '../parser/rcasmNodes';
 import { Symbols } from '../parser/rcasmSymbolScope';
@@ -40,6 +42,16 @@ export class RCASMNavigation {
 				range: h.range
 			};
 		});
+	}
+
+	private getHighlightNode(document: TextDocument, position: Position, program: nodes.Program): nodes.Node | undefined {
+		const offset = document.offsetAt(position);
+		let node = nodes.getNodeAtOffset(program, offset);
+		if (!node || node.type !== nodes.NodeType.Label && node.type !== nodes.NodeType.LabelRef) {
+			return;
+		}
+
+		return node;
 	}
 
 	public findDocumentHighlights(document: TextDocument, position: Position, program: nodes.Program): DocumentHighlight[] {
@@ -141,6 +153,22 @@ export class RCASMNavigation {
 			return true;
 		});
 	}
+
+	public prepareRename(document: TextDocument, position: Position, program: nodes.Program): Range | undefined {
+		const node = this.getHighlightNode(document, position, program);
+		if (node) {
+			return Range.create(document.positionAt(node.offset), document.positionAt(node.end));
+		}
+	}
+
+	public doRename(document: TextDocument, position: Position, newName: string, program: nodes.Program): WorkspaceEdit {
+		const highlights = this.findDocumentHighlights(document, position, program);
+		const edits = highlights.map(h => TextEdit.replace(h.range, newName));
+		return {
+			changes: { [document.uri]: edits }
+		};
+	}
+
 }
 
 function getRange(node: nodes.Node, document: TextDocument): Range {
