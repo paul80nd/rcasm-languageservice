@@ -5,15 +5,22 @@ import * as assert from 'assert';
 import {
 	TextDocument, DocumentHighlightKind, Range, Position,
 	SymbolKind, SymbolInformation, Location,
-	getLanguageService, LanguageService, RCASMProgram
+	getLanguageService, LanguageService, DocumentSymbol
 } from '../rcasmLanguageService';
 
-export function assertSymbols(ls: LanguageService, input: string, expected: SymbolInformation[], lang: string = 'rcasm') {
+export function assertSymbolInfos(ls: LanguageService, input: string, expected: SymbolInformation[], lang: string = 'rcasm') {
 	let document = TextDocument.create(`test://test/test.${lang}`, lang, 0, input);
 
 	let program = ls.parseProgram(document);
 
 	let symbols = ls.findDocumentSymbols(document, program);
+	assert.deepEqual(symbols, expected);
+}
+
+export function assertDocumentSymbols(ls: LanguageService, input: string, expected: DocumentSymbol[], lang: string = 'css') {
+	let document = TextDocument.create(`test://test/test.${lang}`, lang, 0, input);
+	let program = ls.parseProgram(document);
+	let symbols = ls.findDocumentSymbols2(document, program);
 	assert.deepEqual(symbols, expected);
 }
 
@@ -40,12 +47,12 @@ export function assertHighlights(ls: LanguageService, input: string, marker: str
 	assert.equal(nWrites, expectedWrites, input);
 }
 
-suite('RCASM - Navigation', () => {
+suite('RCASM Navigation', () => {
 
-	test('basic labels', () => {
+	test('basic label symbols', () => {
 		let ls = getLanguageService();
-		assertSymbols(ls, 'label1: add', [{ name: 'label1', kind: SymbolKind.Variable, location: Location.create('test://test/test.rcasm', newRange(0, 6)) }]);
-		assertSymbols(ls, 'label2: jmp label2', [{ name: 'label2', kind: SymbolKind.Variable, location: Location.create('test://test/test.rcasm', newRange(0, 6)) }]);
+		assertSymbolInfos(ls, 'label1: add', [{ name: 'label1', kind: SymbolKind.Variable, location: Location.create('test://test/test.rcasm', newRange(0, 6)) }]);
+		assertSymbolInfos(ls, 'label2: jmp label2', [{ name: 'label2', kind: SymbolKind.Variable, location: Location.create('test://test/test.rcasm', newRange(0, 6)) }]);
 	});
 
 	test('mark occurrences for label', () => {
@@ -54,6 +61,11 @@ suite('RCASM - Navigation', () => {
 		assertHighlights(ls, 'label2: jmp label2', 'label2', 2, 1);
 	});
 
+	test('basic document symbols', () => {
+		let ls = getLanguageService();
+		assertDocumentSymbols(ls, 'label1: add', [{ name: 'label1', kind: SymbolKind.Variable, range: newRange(0, 6), selectionRange: newRange(0, 6) }]);
+		assertDocumentSymbols(ls, 'label2: jmp label2', [{ name: 'label2', kind: SymbolKind.Variable, range: newRange(0, 6), selectionRange: newRange(0, 6) }]);
+	});
 });
 
 export function newRange(start: number, end: number) {

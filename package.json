@@ -28,18 +28,18 @@
     "@paul80nd/rcasm": "1.8.3",
     "@vscode/l10n": "^0.0.18",
     "vscode-languageserver-textdocument": "^1.0.12",
-    "vscode-languageserver-types": "^3.17.5",
+    "vscode-languageserver-types": "3.17.5",
     "vscode-uri": "^3.0.8"
   },
   "scripts": {
     "prepack": "npm run clean && npm run compile-esm && npm run test && npm run remove-sourcemap-refs",
-    "compile": "tsc -p ./src",
+    "compile": "tsc -p ./src && npm run lint",
     "compile-esm": "tsc -p ./src/tsconfig.esm.json",
     "watch": "tsc -w -p ./src",
     "clean": "rimraf lib",
     "remove-sourcemap-refs": "node ./build/remove-sourcemap-refs.js",
     "test": "npm run compile && mocha --timeout 5000 ./lib/umd/test/*.js && npm run lint",
     "lint": "eslint src/**/*.ts",
-    "install-types-next": "yarn add vscode-languageserver-types@next -f -S && yarn add vscode-languageserver-textdocument@next -f -S"
+    "install-types-next": "npm install vscode-languageserver-types@next -f -S && npm install vscode-languageserver-textdocument@next -f -S"
   }
 }

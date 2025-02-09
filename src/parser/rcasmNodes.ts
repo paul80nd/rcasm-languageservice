@@ -279,6 +279,10 @@ export class Label extends Node {
 		super(l, NodeType.Label);
 		this.length--;	// ignore colon
 	}
+
+	public getName(): string {
+		return this.getText();
+	}
 }
 
 //#region Pseudos

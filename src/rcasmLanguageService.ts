@@ -9,7 +9,7 @@ import { RCASMValidation } from './services/rcasmValidation';
 import {
 	RCASMProgram,
 	LanguageSettings, LanguageServiceOptions,
-	Diagnostic, Position, CompletionList, Hover, Location, DocumentHighlight,
+	Diagnostic, DocumentSymbol, Position, CompletionList, Hover, Location, DocumentHighlight,
 	SymbolInformation,
 	TextDocument
 } from './rcasmLanguageTypes';
@@ -25,6 +25,7 @@ export interface LanguageService {
 	findReferences(document: TextDocument, position: Position, program: RCASMProgram): Location[];
 	findDocumentHighlights(document: TextDocument, position: Position, program: RCASMProgram): DocumentHighlight[];
 	findDocumentSymbols(document: TextDocument, program: RCASMProgram): SymbolInformation[];
+	findDocumentSymbols2(document: TextDocument, program: RCASMProgram): DocumentSymbol[];
 }
 
 export function getLanguageService(options?: LanguageServiceOptions): LanguageService {
@@ -42,6 +43,7 @@ export function getLanguageService(options?: LanguageServiceOptions): LanguageSe
 		findDefinition: navigation.findDefinition.bind(navigation),
 		findReferences: navigation.findReferences.bind(navigation),
 		findDocumentHighlights: navigation.findDocumentHighlights.bind(navigation),
-		findDocumentSymbols: navigation.findDocumentSymbols.bind(navigation),
+		findDocumentSymbols: navigation.findSymbolInformations.bind(navigation),
+		findDocumentSymbols2: navigation.findDocumentSymbols.bind(navigation),
 	};
 }

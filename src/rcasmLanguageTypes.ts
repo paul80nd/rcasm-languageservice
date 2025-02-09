@@ -6,8 +6,7 @@ import {
 	CompletionList,
 	InsertTextFormat,
 	SymbolInformation, SymbolKind, Location, Hover, MarkedString,
-	DocumentHighlight,
-	DocumentHighlightKind
+	DocumentHighlight, DocumentSymbol, DocumentHighlightKind
 } from 'vscode-languageserver-types';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -19,8 +18,7 @@ export {
 	CompletionList,
 	InsertTextFormat,
 	SymbolInformation, SymbolKind, Location, Hover, MarkedString,
-	DocumentHighlight,
-	DocumentHighlightKind
+	DocumentHighlight, DocumentSymbol, DocumentHighlightKind
 };
 
 export interface LanguageSettings {
