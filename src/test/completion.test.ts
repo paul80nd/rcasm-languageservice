@@ -1,17 +1,26 @@
-import * as assert from 'assert';
-import * as rcasmLanguageService from '../rcasmLanguageService';
+'use strict';
 
-import { CompletionList, CompletionItemKind, MarkupContent, TextEdit } from 'vscode-languageserver-types';
-import { TextDocument } from 'vscode-languageserver-textdocument';
+import * as assert from 'assert';
+import {
+	getLanguageService,
+	TextDocument, CompletionList, CompletionItemKind, InsertTextFormat, Command, MarkupContent
+} from '../rcasmLanguageService';
+import { TextEdit } from 'vscode-languageserver-types';
 
 interface ItemDescription {
 	label: string;
 	detail?: string;
-	documentation?: string | MarkupContent;
+	documentation?: string | MarkupContent | null;
+	/**
+	 * Only test that the documentation includes the substring
+	 */
+	documentationIncludes?: string;
 	kind?: CompletionItemKind;
+	insertTextFormat?: InsertTextFormat;
 	resultText?: string;
-	filterText?: string;
 	notAvailable?: boolean;
+	command?: Command;
+	sortText?: string;
 }
 
 export function assertCompletion(completions: CompletionList, expected: ItemDescription, document: TextDocument) {
@@ -19,17 +28,25 @@ export function assertCompletion(completions: CompletionList, expected: ItemDesc
 		return completion.label === expected.label;
 	});
 	if (expected.notAvailable) {
-		assert.equal(matches.length, 0, expected.label + " should not existing is results");
-		return;
+		assert.equal(matches.length, 0, expected.label + " should not be present");
+	} else {
+		assert.equal(matches.length, 1, expected.label + " should only existing once: Actual: " + completions.items.map(c => c.label).join(', '));
 	}
 
-	assert.equal(matches.length, 1, expected.label + " should only existing once: Actual: " + completions.items.map(c => c.label).join(', '));
 	const match = matches[0];
 	if (expected.detail) {
 		assert.equal(match.detail, expected.detail);
 	}
 	if (expected.documentation) {
 		assert.deepEqual(match.documentation, expected.documentation);
+	}
+	if (expected.documentationIncludes) {
+		assert.ok(match.documentation !== undefined);
+		if (typeof match.documentation === 'string') {
+			assert.ok(match.documentation.indexOf(expected.documentationIncludes) !== -1);
+		} else {
+			assert.ok(match.documentation!.value.indexOf(expected.documentationIncludes) !== -1);
+		}
 	}
 	if (expected.kind) {
 		assert.equal(match.kind, expected.kind);
@@ -38,16 +55,28 @@ export function assertCompletion(completions: CompletionList, expected: ItemDesc
 		const edit = TextEdit.is(match.textEdit) ? match.textEdit : TextEdit.replace(match.textEdit.replace, match.textEdit.newText);
 		assert.equal(TextDocument.applyEdits(document, [edit]), expected.resultText);
 	}
-	if (expected.filterText) {
-		assert.equal(match.filterText, expected.filterText);
+	if (expected.insertTextFormat) {
+		assert.equal(match.insertTextFormat, expected.insertTextFormat);
 	}
-}
+	if (expected.command) {
+		assert.deepEqual(match.command, expected.command);
+	}
+	if (expected.sortText) {
+		assert.equal(match.sortText, expected.sortText);
+	}
+};
 
-export function testCompletionFor(value: string, expected: { count?: number, items?: ItemDescription[] }): void {
+export type ExpectedCompetions = {
+	count?: number;
+	items?: ItemDescription[];
+};
+
+export async function testCompletionFor(value: string, expected: ExpectedCompetions) {
 	const offset = value.indexOf('|');
+	assert.ok(offset !== -1, '| missing in ' + value);
 	value = value.substr(0, offset) + value.substr(offset + 1);
 
-	const ls = rcasmLanguageService.getLanguageService();
+	const ls = getLanguageService();
 
 	const document = TextDocument.create('test://test/test.rcasm', 'rcasm', 0, value);
 	const position = document.positionAt(offset);
@@ -61,60 +90,66 @@ export function testCompletionFor(value: string, expected: { count?: number, ite
 		assert.ok(previous !== label, `Duplicate label ${label} in ${labels.join(',')}`);
 		previous = label;
 	}
-	if (expected.count) {
-		assert.equal(list.items, expected.count);
+
+	if (typeof expected.count === 'number') {
+		assert.equal(list.items.length, expected.count);
 	}
 	if (expected.items) {
 		for (const item of expected.items) {
 			assertCompletion(list, item, document);
 		}
 	}
-}
+};
 
 suite('RCASM Completion', () => {
 
-	test('Basic Completion', function (): any {
-
-		testCompletionFor('|', {
-			items: [{ label: 'ldi', resultText: 'ldi ${1:a},${2:0}' }, { label: 'add', resultText: 'add' }]
+	test('Basic Completion', async function () {
+		await testCompletionFor('|', {
+			items: [
+				{ label: 'ldi', resultText: 'ldi ${1:a},${2:0}' },
+				{ label: 'add', resultText: 'add' }
+			]
 		});
-
-		testCompletionFor(' |', {
-			items: [{ label: 'ldi', resultText: ' ldi ${1:a},${2:0}' }, { label: 'add', resultText: ' add' }]
+		await testCompletionFor(' |', {
+			items: [
+				{ label: 'ldi', resultText: ' ldi ${1:a},${2:0}' },
+				{ label: 'add', resultText: ' add' }
+			]
 		});
-
-		testCompletionFor(' l|', {
+		await testCompletionFor(' l|', {
 			items: [{ label: 'ldi', resultText: ' ldi ${1:a},${2:0}' }]
 		});
 
-		testCompletionFor('label: |', {
-			items: [{ label: 'ldi', resultText: 'label: ldi ${1:a},${2:0}' }, { label: 'add', resultText: 'label: add' }]
+		await testCompletionFor('label: |', {
+			items: [
+				{ label: 'ldi', resultText: 'label: ldi ${1:a},${2:0}' },
+				{ label: 'add', resultText: 'label: add' }
+			]
 		});
-		
-		testCompletionFor('label: l|', {
+
+		await testCompletionFor('label: l|', {
 			items: [{ label: 'ldi', resultText: 'label: ldi ${1:a},${2:0}' }]
 		});
 
-		testCompletionFor(' ld| a,5', {
+		await testCompletionFor(' ld| a,5', {
 			items: [{ label: 'ldi', resultText: ' ldi ${1:a},${2:0} a,5' }]
 		});
-
-		testCompletionFor('label: l| ; comment', {
+		await testCompletionFor('label: l| ; comment', {
 			items: [{ label: 'ldi', resultText: 'label: ldi ${1:a},${2:0} ; comment' }]
 		});
 
 	});
-	
-	test('Completion includes detail', () => {
-		testCompletionFor('bc|', {
+
+	test('Completion includes detail', async function () {
+		await testCompletionFor('bc|', {
 			items: [
 				{ label: 'bcs', detail: 'Branch if Carry Set [GOTO]' }
 			]
 		});
 	});
 
-	test('Completion includes documentation', () => {
-		testCompletionFor('ad|', {
+	test('Completion includes documentation', async function () {
+		await testCompletionFor('ad|', {
 			items: [
 				{
 					label: 'add',

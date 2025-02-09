@@ -3,7 +3,7 @@
 import {
 	Range, Position, MarkupContent, MarkupKind,
 	Diagnostic, DiagnosticSeverity,
-	CompletionList,
+	Command, CompletionList, CompletionItemKind,
 	InsertTextFormat, Location, Hover, MarkedString,
 	SymbolInformation, SymbolKind,
 	DocumentHighlight, DocumentHighlightKind, DocumentSymbol,
@@ -17,7 +17,7 @@ export {
 	TextDocument,
 	Range, Position, MarkupContent, MarkupKind,
 	Diagnostic, DiagnosticSeverity,
-	CompletionList,
+	Command, CompletionList, CompletionItemKind,
 	InsertTextFormat, Location, Hover, MarkedString,
 	SymbolInformation, SymbolKind,
 	DocumentHighlight, DocumentHighlightKind, DocumentSymbol,
