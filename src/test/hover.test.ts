@@ -135,6 +135,10 @@ suite('RCASM Hover', () => {
 		assertHoverMkdn('!fill| 6, "t"', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
 	});
 
+	test('Align Directive', () => {
+		assertHoverMkdn('!align| 4', 'Writes 8-bit zeros into the output until the current location is a multiple of the given value.\n\nSyntax: `<value>{2,4,8,16...}`');
+	});
+
 	test('Branching', () => {
 		assertHoverMkdn('jm|p label1', 'Jump to Label [GOTO]\n\n`PC = (label1)`');
 		assertHoverMkdn('jsr |label2 ', 'Call Subroutine (Jump and Link) [GOTO]\n\n`XY = PC, PC = (label2)`');

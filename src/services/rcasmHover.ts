@@ -72,6 +72,20 @@ export class RCASMHover {
 				}
 				break;
 			}
+
+			if (node instanceof nodes.AlignDirective) {
+				const dtype = node.getText().slice(0, 6).toLowerCase();
+				const entry = this.rcasmDataManager.getDirective(dtype);
+				if (entry) {
+					const contents = languageFacts.getEntryDescription(entry, this.doesSupportMarkdown());
+					if (contents) {
+						hover = { contents, range: getRange(node), };
+					} else {
+						hover = null;
+					}
+				}
+				break;
+			}
 		}
 
 		if (hover) {

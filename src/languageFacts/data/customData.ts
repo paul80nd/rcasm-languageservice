@@ -239,6 +239,12 @@ export const rcasmData: RCASMDataV1 = {
 	],
 	"directives": [
 		{
+			"name": "!align",
+			"summary": "Define Align",
+			"description": "Writes 8-bit zeros into the output until the current location is a multiple of the given value.",
+			"syntax": "<value>{2,4,8,16...}"
+		},
+		{
 			"name": "!byte",
 			"summary": "Define Byte Data",
 			"description": "Writes the given 8-bit values directly into the output starting from current location.",

@@ -157,6 +157,9 @@ class Line extends Node {
 					break;
 				case 'fill':
 					this.adoptChild(new FillDirective(l.stmt));
+					break;
+				case 'align':
+					this.adoptChild(new AlignDirective(l.stmt));
 			}
 		}
 	}
@@ -192,13 +195,9 @@ export class SetPC extends Node {
 	}
 }
 
-export class DataDirective extends Node {
-	constructor(d: rcasm.StmtData) { super(d, NodeType.Directive); }
-}
-
-export class FillDirective extends Node {
-	constructor(d: rcasm.StmtFill) { super(d, NodeType.Directive); }
-}
+export class DataDirective extends Node { constructor(d: rcasm.StmtData) { super(d, NodeType.Directive); } }
+export class FillDirective extends Node { constructor(d: rcasm.StmtFill) { super(d, NodeType.Directive); } }
+export class AlignDirective extends Node { constructor(d: rcasm.StmtAlign) { super(d, NodeType.Directive); } }
 
 export class Instruction extends Node {
 
