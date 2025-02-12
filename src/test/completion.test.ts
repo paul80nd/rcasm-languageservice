@@ -134,8 +134,39 @@ suite('RCASM Completion', () => {
 		await testCompletionFor(' ld| a,5', {
 			items: [{ label: 'ldi', resultText: ' ldi ${1:a},${2:0} a,5' }]
 		});
+
 		await testCompletionFor('label: l| ; comment', {
 			items: [{ label: 'ldi', resultText: 'label: ldi ${1:a},${2:0} ; comment' }]
+		});
+	});
+
+	test('Directive Completion', async function () {
+		await testCompletionFor('|', {
+			items: [
+				{ label: '!align', resultText: '!align ${1:8}' },
+				{ label: 'add', resultText: 'add' }
+			]
+		});
+		await testCompletionFor(' |', {
+			items: [
+				{ label: '!word', resultText: ' !word ${1:0x0000}' },
+				{ label: 'add', resultText: ' add' }
+			]
+		});
+
+		await testCompletionFor(' !|', { items: [{ label: '!word', resultText: ' !word ${1:0x0000}' }] });
+
+		await testCompletionFor('label: |', {
+			items: [
+				{ label: '!fill', resultText: 'label: !fill ${1:8},${2:0x00}' },
+				{ label: 'add', resultText: 'label: add' }
+			]
+		});
+
+		await testCompletionFor('label: l|', { items: [{ label: 'ldi', resultText: 'label: ldi ${1:a},${2:0}' }] });
+
+		await testCompletionFor('label: !f| ; comment', {
+			items: [{ label: '!fill', resultText: 'label: !fill ${1:8},${2:0x00} ; comment' }]
 		});
 
 	});

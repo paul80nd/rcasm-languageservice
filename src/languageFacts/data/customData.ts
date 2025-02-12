@@ -242,24 +242,28 @@ export const rcasmData: RCASMDataV1 = {
 			"name": "!align",
 			"summary": "Define Align",
 			"description": "Writes 8-bit zeros into the output until the current location is a multiple of the given value.",
+			"snippet": "!align ${1:8}",
 			"syntax": "<value>{2,4,8,16...}"
 		},
 		{
 			"name": "!byte",
 			"summary": "Define Byte Data",
 			"description": "Writes the given 8-bit values directly into the output starting from current location.",
+			"snippet": "!byte ${1:0x00}",
 			"syntax": "<value>{0x00,0xFF} [ ,...n ]"
 		},
 		{
 			"name": "!word",
 			"summary": "Define Word Data",
 			"description": "Writes the given 16-bit values directly into the output starting from current location.",
+			"snippet": "!word ${1:0x0000}",
 			"syntax": "<value>{0x0000,0xFFFF} [ ,...n ]"
 		},
 		{
 			"name": "!fill",
 			"summary": "Define Fill Space",
 			"description": "Writes the given 8-bit value n times directly into the output starting from current location.",
+			"snippet": "!fill ${1:8},${2:0x00}",
 			"syntax": "<count>{0,255}, <value>{0x00,0xFF}"
 		}
 	]

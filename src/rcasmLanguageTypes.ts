@@ -119,6 +119,7 @@ export interface IMnemonicData {
 export interface IDirectiveData {
 	name: string;
 	summary: string;
+	snippet?: string;
 	description?: string | MarkupContent;
 	syntax?: string;
 }
