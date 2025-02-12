@@ -1,108 +1,162 @@
 'use strict';
 
 import * as assert from 'assert';
-import { Hover, MarkupContent, TextDocument, getLanguageService } from '../rcasmLanguageService';
+import { Hover, Position, Range, TextDocument, getLanguageService } from '../rcasmLanguageService';
 
-export function assertHover(value: string, expectedHoverContent: MarkupContent | null, expectedHoverOffset: number | null): void {
+function assertHoverMkdn(value: string, expected: string | null) {
+	if (expected) {
+		assertHover(value, { contents: { kind: 'markdown', value: expected } });
+	} else {
+		assertHover(value, null);
+	}
+}
+
+function assertHover(value: string, expected: Hover | null): void {
 	const offset = value.indexOf('|');
 	value = value.slice(0, offset) + value.slice(offset + 1);
 
-	const document = TextDocument.create('test://test/test.rcasm', 'rcasm', 0, value);
+	const document = TextDocument.create('test://test/test.rcasm', 'rcasm', 1, value);
 	let ls = getLanguageService();
 	let program = ls.parseProgram(document);
 	const position = document.positionAt(offset);
 
-	const hover = ls.doHover(document, position, program);
-	assert.deepStrictEqual(hover && hover.contents, expectedHoverContent);
-	assert.strictEqual(hover && document.offsetAt(hover.range!.start), expectedHoverOffset);
+	const hoverResult = ls.doHover(document, position, program);
+	if (expected) {
+		assert(hoverResult);
+
+		if (hoverResult!.range && expected.range) {
+			assert.deepEqual(hoverResult!.range, expected.range);
+		}
+		assert.deepEqual(hoverResult!.contents, expected.contents);
+	}
+	else {
+		assert.equal(hoverResult, null);
+	}
 }
 
 suite('RCASM Hover', () => {
 	test('Simple Position', () => {
-		const addContent: MarkupContent = {
-			kind: 'markdown',
-			value: 'Arithmetic Add [ALU]\n\n`A = B + C`'
-		};
+		const addContent: string = 'Arithmetic Add [ALU]\n\n`A = B + C`';
 
-		assertHover('| add', null, null);
-		assertHover('|add', addContent, 0);
-		assertHover('a|dd', addContent, 0);
-		assertHover('add|', addContent, 0);
-		assertHover('add \n ad|d', addContent, 6);
-		assertHover('lab|el: add', null, null);
-		assertHover('add ;comm|ent', null, null);
+		assertHoverMkdn('| add', null);
+		assertHoverMkdn('|add', addContent);
+		assertHoverMkdn('a|dd', addContent);
+		assertHoverMkdn('add|', addContent);
+		assertHoverMkdn('lab|el: add', null);
+		assertHoverMkdn('add ;comm|ent', null);
+		assertHover('add \n ad|d', { contents: { kind: 'markdown', value: addContent }, range: testRange(1, 4, 1) });
 	});
 
-	test('ALU', function (): any {
-		assertHover('inc|', { kind: 'markdown', value: 'Increment [ALU]\n\n`A = B + 1`' }, 0);
-		assertHover('inc| a', { kind: 'markdown', value: 'Increment [ALU]\n\n`A = B + 1`' }, 0);
-		assertHover('inc| d', { kind: 'markdown', value: 'Increment [ALU]\n\n`D = B + 1`' }, 0);
-		assertHover('cmp|', { kind: 'markdown', value: 'Compare (Logic Xor) [ALU]\n\n`A = B != C`' }, 0);
-		assertHover('cmp| d', { kind: 'markdown', value: 'Compare (Logic Xor) [ALU]\n\n`D = B != C`' }, 0);
+	test('ALU', () => {
+		assertHoverMkdn('inc|', 'Increment [ALU]\n\n`A = B + 1`');
+		assertHoverMkdn('inc| a', 'Increment [ALU]\n\n`A = B + 1`');
+		assertHoverMkdn('inc| d', 'Increment [ALU]\n\n`D = B + 1`');
+		assertHoverMkdn('cmp|', 'Compare (Logic Xor) [ALU]\n\n`A = B ^ C`');
+		assertHoverMkdn('cmp| d', 'Compare (Logic Xor) [ALU]\n\n`D = B ^ C`');
 	});
 
-	test('Bad Params', function (): any {
-		assertHover('mov|', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`? = ?`' }, 0);
-		assertHover('mov| ,b', null, null);
-		assertHover('mov| a,', null, null);
-		assertHover('mov| q,', null, null);
-		assertHover('mov| q,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`(q) = C`' }, 0);
+	test('Bad Params', () => {
+		assertHoverMkdn('mov|', 'Copy Register to Register [MOV8|MOV16]\n\n`? = ?`');
+		assertHoverMkdn('mov| ,b', null);
+		assertHoverMkdn('mov| a,', null);
+		assertHoverMkdn('mov| q,', null);
+		assertHoverMkdn('mov| q,c', 'Copy Register to Register [MOV8|MOV16]\n\n`(q) = C`');
 	});
 
-	test('CLR', function (): any {
-		assertHover('clr| c', { kind: 'markdown', value: 'Zero Value [MOV8]\n\n`C = 0`' }, 0);
-		assertHover('clr y|', { kind: 'markdown', value: 'Zero Value [MOV8]\n\n`Y = 0`' }, 0);
+	test('CLR', () => {
+		assertHoverMkdn('clr| c', 'Zero Value [MOV8|MOV16]\n\n`C = 0`');
+		assertHoverMkdn('clr y|', 'Zero Value [MOV8|MOV16]\n\n`Y = 0`');
 	});
 
-	test('MOV', function (): any {
-		assertHover('mov| b,c', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`B = C`' }, 0);
-		assertHover('mov a|,d', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`A = D`' }, 0);
-		assertHover('mov m1,|x', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`M1 = X`' }, 0);
-		assertHover('mov xy,|j', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`XY = J`' }, 0);
-		assertHover('mov xy,a|s', { kind: 'markdown', value: 'Copy Register to Register [MOV8|MOV16]\n\n`XY = AS`' }, 0);
+	test('MOV', () => {
+		assertHoverMkdn('mov| b,c', 'Copy Register to Register [MOV8|MOV16]\n\n`B = C`');
+		assertHoverMkdn('mov a|,d', 'Copy Register to Register [MOV8|MOV16]\n\n`A = D`');
+		assertHoverMkdn('mov m1,|x', 'Copy Register to Register [MOV8|MOV16]\n\n`M1 = X`');
+		assertHoverMkdn('mov xy,|j', 'Copy Register to Register [MOV8|MOV16]\n\n`XY = J`');
+		assertHoverMkdn('mov xy,a|s', 'Copy Register to Register [MOV8|MOV16]\n\n`XY = AS`');
 	});
 
-	test('HLT', function (): any {
-		assertHover('hlt|', { kind: 'markdown', value: 'Halt [MISC]\n\n`PC = PC + 1`' }, 0);
-		assertHover('hlr|', { kind: 'markdown', value: 'Halt and Reload [MISC]\n\n`PC = AS`' }, 0);
+	test('HLT', () => {
+		assertHoverMkdn('hlt|', 'Halt [MISC]\n\n`HALT (PC = PC + 1)`');
+		assertHoverMkdn('hlr|', 'Halt and Reload [MISC]\n\n`HALT (PC = AS)`');
 	});
 
-	test('LDI', function (): any {
-		assertHover('ldi| a,0', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`A = 0`' }, 0);
-		assertHover('ldi| b,-5', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`B = -5`' }, 0);
-		assertHover('ldi| a,11', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`A = 11`' }, 0);
-		assertHover('ldi| m,0xFEDC', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`M = 0xFEDC`' }, 0);
-		assertHover('ldi| j,label', { kind: 'markdown', value: 'Load Immediate [SETAB]\n\n`J = (label)`' }, 0);
+	test('IXY', () => {
+		assertHoverMkdn('ixy|', 'Increments contents of 16-bit register XY [INCXY]\n\n`XY = XY + 1`');
 	});
 
-	test('LDS', function (): any {
-		assertHover('lds|', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`? = DS`' }, 0);
-		assertHover('lds| a', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`A = DS`' }, 0);
-		assertHover('lds| d', { kind: 'markdown', value: 'Load Switches [MISC]\n\n`D = DS`' }, 0);
+	test('LDI', () => {
+		assertHoverMkdn('ldi| a,0', 'Load Immediate [SETAB|GOTO]\n\n`A = 0`');
+		assertHoverMkdn('ldi| b,-5', 'Load Immediate [SETAB|GOTO]\n\n`B = -5`');
+		assertHoverMkdn('ldi| a,11', 'Load Immediate [SETAB|GOTO]\n\n`A = 11`');
+		assertHoverMkdn('ldi| b,0xe', 'Load Immediate [SETAB|GOTO]\n\n`B = 14`');
+		assertHoverMkdn('ldi| m,0xFEDC', 'Load Immediate [SETAB|GOTO]\n\n`M = 0xFEDC`');
+		assertHoverMkdn('ldi| j,label', 'Load Immediate [SETAB|GOTO]\n\n`J = (label)`');
 	});
 
-	test('ORG', function (): any {
-		assertHover('org| 0xFEDC', { kind: 'markdown', value: 'Set Program Counter [PSEUDO]\n\n`PC = 0xFEDC`' }, 0);
+	test('LDS', () => {
+		assertHoverMkdn('lds|', 'Load Switches [MISC]\n\n`? = DS`');
+		assertHoverMkdn('lds| a', 'Load Switches [MISC]\n\n`A = DS`');
+		assertHoverMkdn('lds| d', 'Load Switches [MISC]\n\n`D = DS`');
 	});
 
-	test('DFB', function (): any {
-		assertHover('dfb| 0xFE', { kind: 'markdown', value: 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`' }, 0);
-		assertHover('dfb| 0xFE, 123', { kind: 'markdown', value: 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`' }, 0);
-		assertHover('dfb| "test"', { kind: 'markdown', value: 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`' }, 0);
+	test('LDR', () => {
+		assertHoverMkdn('ldr|', 'Load Register from Memory [LOAD]\n\n`? = (M)`');
+		assertHoverMkdn('ldr| a', 'Load Register from Memory [LOAD]\n\n`A = (M)`');
+		assertHoverMkdn('ldr| c', 'Load Register from Memory [LOAD]\n\n`C = (M)`');
 	});
 
-	test('DFW', function (): any {
-		assertHover('dfw| 0xFEDC', { kind: 'markdown', value: 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`' }, 0);
-		assertHover('dfw| 0xFEDC, 213123', { kind: 'markdown', value: 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`' }, 0);
-		assertHover('dfw| "test"', { kind: 'markdown', value: 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`' }, 0);
+	test('STR', () => {
+		assertHoverMkdn('str|', 'Store Register into Memory [STORE]\n\n`(M) = ?`');
+		assertHoverMkdn('str| a', 'Store Register into Memory [STORE]\n\n`(M) = A`');
+		assertHoverMkdn('str| c', 'Store Register into Memory [STORE]\n\n`(M) = C`');
 	});
 
-	test('Branching', function (): any {
-		assertHover('jm|p label1', { kind: 'markdown', value: 'Jump to Label [GOTO]\n\n`PC = (label1)`' }, 0);
-		assertHover('jsr |label2', { kind: 'markdown', value: 'Call Subroutine (Jump and Link) [GOTO]\n\n`XY = PC, PC = (label2)`' }, 0);
-		assertHover('bne lab|el3', { kind: 'markdown', value: 'Branch if Not Equal/Zero [GOTO]\n\n`PC = (label3) [if not Z]`' }, 0);
-		assertHover('beq label4|', { kind: 'markdown', value: 'Branch if Equal/Zero [GOTO]\n\n`PC = (label4) [if Z]`' }, 0);
-		assertHover('ble| label5', { kind: 'markdown', value: 'Branch if Less Than or Equal (Sign+Zero) [GOTO]\n\n`PC = (label5) [if S or Z]`' }, 0);
+
+	test('ORG', () => {
+		assertHoverMkdn('org| 0xFEDC', 'Set Program Counter [PSEUDO]\n\n`PC = 0xFEDC`');
+	});
+
+	test('DFB', () => {
+		assertHoverMkdn('dfb| 0xFE', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
+		assertHoverMkdn('dfb| 0xFE, 123', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
+		assertHoverMkdn('dfb| "test"', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
+	});
+
+	test('DFW', () => {
+		assertHoverMkdn('dfw| 0xFEDC', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
+		assertHoverMkdn('dfw| 0xFEDC, 213123', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
+		assertHoverMkdn('dfw| "test"', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
+	});
+
+	test('DFS', () => {
+		assertHoverMkdn('dfs| 3,0', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
+		assertHoverMkdn('dfs| 4, 0x11', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
+		assertHoverMkdn('dfs| 6, "t"', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
+	});
+
+	test('Branching', () => {
+		assertHoverMkdn('jm|p label1', 'Jump to Label [GOTO]\n\n`PC = (label1)`');
+		assertHoverMkdn('jsr |label2 ', 'Call Subroutine (Jump and Link) [GOTO]\n\n`XY = PC, PC = (label2)`');
+		assertHoverMkdn('bne lab|el3', 'Branch if Not Equal/Zero [GOTO]\n\n`PC = (label3) [if not Z]`');
+		assertHoverMkdn('beq label4|', 'Branch if Equal/Zero [GOTO]\n\n`PC = (label4) [if Z]`');
+		assertHoverMkdn('ble| label5 ', 'Branch if Less Than or Equal (Sign+Zero) [GOTO]\n\n`PC = (label5) [if S or Z]`');
+		assertHoverMkdn('bcs |0x12aB', 'Branch if Carry Set [GOTO]\n\n`PC = 0x12AB [if CY]`');
+		assertHoverMkdn('blt 2345|3', 'Branch if Less Than (Sign) [GOTO]\n\n`PC = 0x5B9D [if S]`');
+		assertHoverMkdn('bmi label4|', 'Branch if Minus/Sign [GOTO]\n\n`PC = (label4) [if S]`');
+		assertHoverMkdn('rt|s', 'Return from Subroutine [MOV16]\n\n`PC = XY`');
+	});
+
+	test('Scopes', () => {
+		assertHoverMkdn('label1: { \n jm|p label1 \n }', 'Jump to Label [GOTO]\n\n`PC = (label1)`');
+	});
+
+	test('§ Operator', () => {
+		assertHoverMkdn('Ldi| m,5§ra', 'Load Immediate [SETAB|GOTO]\n\n`M = 5§ra`');
 	});
 
 });
+
+export function testRange(start: number, end: number, line: number = 0) {
+	return Range.create(Position.create(line, start), Position.create(line, end));
+}

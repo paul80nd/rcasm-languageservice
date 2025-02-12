@@ -20,7 +20,7 @@ export class RCASMParser {
 			if (textDocument.version !== versionId) {
 				throw new Error('Underlying model has changed, AST is no longer valid');
 			}
-			return text.substr(offset, length);
+			return text.substring(offset, offset + length);
 		};
 		root.textProvider = textProvider;
 

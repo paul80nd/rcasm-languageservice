@@ -75,7 +75,7 @@ export const rcasmData: RCASMDataV1 = {
 		},
 		{
 			"name": "clr",
-			"class": "MOV8",
+			"class": "MOV8|MOV16",
 			"summary": "Zero Value",
 			"description": "Clears the content (=0) of a given register.",
 			"synopsis": "{0} = 0",
@@ -86,7 +86,7 @@ export const rcasmData: RCASMDataV1 = {
 			"class": "ALU",
 			"summary": "Compare (Logic Xor)",
 			"description": "Compares the values in register B and C setting the zero flag if the same (affects register A or D) (equivalent to eor).",
-			"synopsis": "{0} = B != C",
+			"synopsis": "{0} = B ^ C",
 			"syntax": "[ a | d ]"
 		},
 		{
@@ -110,7 +110,7 @@ export const rcasmData: RCASMDataV1 = {
 			"class": "MISC",
 			"summary": "Halt",
 			"description": "Halts execution of the program",
-			"synopsis": "PC = PC + 1",
+			"synopsis": "HALT (PC = PC + 1)",
 			"syntax": "<label>"
 		},
 		{
@@ -118,7 +118,7 @@ export const rcasmData: RCASMDataV1 = {
 			"class": "MISC",
 			"summary": "Halt and Reload",
 			"description": "Halts execution of the program and sets the program counter from the address switches",
-			"synopsis": "PC = AS",
+			"synopsis": "HALT (PC = AS)",
 			"syntax": "<label>"
 		},
 		{
@@ -171,7 +171,7 @@ export const rcasmData: RCASMDataV1 = {
 		},
 		{
 			"name": "ldi",
-			"class": "SETAB",
+			"class": "SETAB|GOTO",
 			"summary": "Load Immediate",
 			"snippet": "ldi ${1:a},${2:0}",
 			"description": "Loads an 8-bit value in to register A/B or a 16-bit value in to register M/J.",
@@ -255,7 +255,7 @@ export const rcasmData: RCASMDataV1 = {
 			"class": "PSEUDO",
 			"summary": "Define Fill Space",
 			"description": "Writes the given 8-bit value n times directly into the output starting from current location.",
-			"syntax": "<value>{0x00,0xFF} , <count>{0,255}"
+			"syntax": "<count>{0,255}, <value>{0x00,0xFF}"
 		}
 	]
 };

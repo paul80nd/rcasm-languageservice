@@ -12,36 +12,15 @@ export enum NodeType {
 	Register,
 	SetPC,
 	Expr,
-	Data
+	Directive,
+	Fill,
+	Scope,
+	Expression
 }
 
 export enum ReferenceType {
 	Label
 }
-
-// export enum RegisterType {
-// 	A,
-// 	B,
-// 	C,
-// 	D,
-// 	J,
-// 	J1,
-// 	J2,
-// 	M,
-// 	M1,
-// 	M2,
-// 	X,
-// 	XY,
-// 	Y
-// }
-
-// export enum OpcodeType {
-// 	NOP,
-// 	ADD, INC, AND, ORR, EOR, NOT, ROL, CMP,
-// 	MOV, CLR, LDI, OPC,
-// 	JMP, JSR, RTS,
-// 	BNE, BEQ, BLT, BLE, BMI, BCS
-// }
 
 export function getNodeAtOffset(node: Node, offset: number): Node | null {
 
@@ -96,17 +75,12 @@ export class Node {
 	public textProvider: ITextProvider | undefined; // only set on the root node
 
 	private children: Node[] | undefined;
-	// 	private issues: IMarker[] | undefined;
 
 	constructor(rnode: rcasm.Node | undefined, private nodeType: NodeType) {
 		this.parent = null;
 		this.offset = rnode?.loc.start.offset ?? 0;
 		this.length = (rnode?.loc.end.offset ?? 0) - this.offset;
 	}
-
-	// 	public set type(type: NodeType) {
-	// 		this.nodeType = type;
-	// 	}
 
 	public get type(): NodeType {
 		return this.nodeType;
@@ -144,12 +118,6 @@ export class Node {
 	}
 
 	protected adoptChild(node: Node): Node {
-		// 		if (node.parent && node.parent.children) {
-		// 			const idx = node.parent.children.indexOf(node);
-		// 			if (idx >= 0) {
-		// 				node.parent.children.splice(idx, 1);
-		// 			}
-		// 		}
 		node.parent = this;
 		let children = this.children;
 		if (!children) {
@@ -158,90 +126,6 @@ export class Node {
 		children.push(node);
 		return node;
 	}
-
-	// 	public attachTo(parent: Node, index: number = -1): Node {
-	// 		if (parent) {
-	// 			parent.adoptChild(this, index);
-	// 		}
-	// 		return this;
-	// 	}
-
-	// 	public collectIssues(results: any[]): void {
-	// 		if (this.issues) {
-	// 			results.push.apply(results, this.issues);
-	// 		}
-	// 	}
-
-	// 	public addIssue(issue: IMarker): void {
-	// 		if (!this.issues) {
-	// 			this.issues = [];
-	// 		}
-	// 		this.issues.push(issue);
-	// 	}
-
-	// 	public isErroneous(recursive: boolean = false): boolean {
-	// 		if (this.issues && this.issues.length > 0) {
-	// 			return true;
-	// 		}
-	// 		return recursive && Array.isArray(this.children) && this.children.some(c => c.isErroneous(true));
-	// 	}
-
-	// 	public setNode(field: keyof this, node: Node | null, index: number = -1): boolean {
-	// 		if (node) {
-	// 			node.attachTo(this, index);
-	// 			(<any>this)[field] = node;
-	// 			return true;
-	// 		}
-	// 		return false;
-	// 	}
-
-	// 	public addChild(node: Node | null): node is Node {
-	// 		if (node) {
-	// 			if (!this.children) {
-	// 				this.children = [];
-	// 			}
-	// 			node.attachTo(this);
-	// 			this.updateOffsetAndLength(node);
-	// 			return true;
-	// 		}
-	// 		return false;
-	// 	}
-
-	// 	private updateOffsetAndLength(node: Node): void {
-	// 		if (node.offset < this.offset || this.offset === -1) {
-	// 			this.offset = node.offset;
-	// 		}
-	// 		const nodeEnd = node.end;
-	// 		if ((nodeEnd > this.end) || this.length === -1) {
-	// 			this.length = nodeEnd - this.offset;
-	// 		}
-	// 	}
-
-	// 	public getChildren(): Node[] {
-	// 		return this.children ? this.children.slice(0) : [];
-	// 	}
-
-	// 	public getParent(): Node | null {
-	// 		let result = this.parent;
-	// 		while (result instanceof Nodelist) {
-	// 			result = result.parent;
-	// 		}
-	// 		return result;
-	// 	}
-
-	// }
-
-	// export interface NodeConstructor {
-	// 	new(offset: number, len: number): Node;
-	// }
-
-	// export class Nodelist extends Node {
-	// 	constructor(parent: Node, index: number = -1) {
-	// 		super(-1, -1);
-	// 		this.attachTo(parent, index);
-	// 		this.offset = -1;
-	// 		this.length = -1;
-	// 	}
 }
 
 export function adapt(p: rcasm.Program): Program {
@@ -259,6 +143,7 @@ class Line extends Node {
 	constructor(l: rcasm.Line) {
 		super(l, NodeType.Line);
 		if (l.label) { this.adoptChild(new Label(l.label)); }
+		if (l.scopedStmts) { this.adoptChild(new Scope(l)) }
 		if (l.stmt) {
 			switch (l.stmt.type) {
 				case 'insn':
@@ -268,7 +153,10 @@ class Line extends Node {
 					this.adoptChild(new SetPC(l.stmt));
 					break;
 				case 'data':
-					this.adoptChild(new Data(l.stmt));
+					this.adoptChild(new DataDirective(l.stmt));
+					break;
+				case 'fill':
+					this.adoptChild(new FillDirective(l.stmt));
 			}
 		}
 	}
@@ -285,33 +173,32 @@ export class Label extends Node {
 	}
 }
 
-//#region Pseudos
+export class Scope extends Node {
+	constructor(ss: rcasm.Line) {
+		super(ss, NodeType.Scope);
+		ss.scopedStmts!.forEach(s => {
+			this.adoptChild(new Line(s));
+		});
+	}
+}
 
 export class SetPC extends Node {
 
-	public pcExpr: Expr;
+	public pcExpr: Expression;
 
 	constructor(spc: rcasm.StmtSetPC) {
 		super(spc, NodeType.SetPC);
-		this.pcExpr = this.adoptChild(new Expr(spc.pc));
+		this.pcExpr = this.adoptChild(new Expression(spc.pc));
 	}
 }
 
-export class Data extends Node {
-	constructor(d: rcasm.StmtData) {
-		super(d, NodeType.Data);
-	}
+export class DataDirective extends Node {
+	constructor(d: rcasm.StmtData) { super(d, NodeType.Directive); }
 }
 
-export class Expr extends Node {
-	constructor(e: rcasm.Expr) {
-		super(e, NodeType.Expr);
-	}
+export class FillDirective extends Node {
+	constructor(d: rcasm.StmtFill) { super(d, NodeType.Directive); }
 }
-
-//#endregion
-
-//#region Instructions 
 
 export class Instruction extends Node {
 
@@ -330,7 +217,7 @@ export class Instruction extends Node {
 				case 'qualified-ident':
 					return this.adoptChild(new LabelRef(p));
 				default:
-					return undefined;
+					return this.adoptChild(new Expression(p));
 			}
 		};
 		this.mnemonic = si.mnemonic.toLowerCase();
@@ -342,9 +229,7 @@ export class Instruction extends Node {
 export type Operand = LabelRef | Literal | Register;
 
 export class LabelRef extends Node {
-	constructor(sqi: rcasm.ScopeQualifiedIdent) {
-		super(sqi, NodeType.LabelRef);
-	}
+	constructor(sqi: rcasm.ScopeQualifiedIdent) { super(sqi, NodeType.LabelRef); }
 }
 
 export class Literal extends Node {
@@ -357,6 +242,10 @@ export class Literal extends Node {
 	}
 }
 
+export class Expression extends Node {
+	constructor(e: rcasm.Expr) { super(e, NodeType.Expression); }
+}
+
 export class Register extends Node {
 
 	public value: string;
@@ -366,8 +255,6 @@ export class Register extends Node {
 		this.value = r.value.toUpperCase();
 	}
 }
-
-//#endregion 
 
 export interface IVisitor {
 	visitNode: (node: Node) => boolean;

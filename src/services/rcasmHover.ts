@@ -43,7 +43,7 @@ export class RCASMHover {
 			if (node instanceof nodes.SetPC) {
 				const entry = languageFacts.rcasmDataManager.getMnemonic('org');
 				if (entry) {
-					const paramNames = [ node.pcExpr.getText() ];
+					const paramNames = [node.pcExpr.getText()];
 					const content = languageFacts.getEntrySpecificDescription(entry, paramNames, this.doesSupportMarkdown());
 					hover = {
 						contents: content,
@@ -52,15 +52,15 @@ export class RCASMHover {
 				}
 			}
 
-			if (node instanceof nodes.Data) {
-				const dtype = node.getText().slice(0,3).toLowerCase();
+			if (node instanceof nodes.DataDirective || node instanceof nodes.FillDirective) {
+				const dtype = node.getText().slice(0, 3).toLowerCase();
 				const entry = languageFacts.rcasmDataManager.getMnemonic(dtype);
 				if (entry) {
 					const content = languageFacts.getEntryDescription(entry, this.doesSupportMarkdown());
 					hover = {
 						contents: content,
 						range: getRange(node)
-					};			
+					};
 				}
 			}
 		}
@@ -76,7 +76,7 @@ export class RCASMHover {
 		let paramNames: string[] = [];
 
 		if (insn.p1) {
-			paramNames.push(this.getParamName(insn.p1, insn.mnemonic));
+			paramNames.push(this.getParamName(entry, insn.p1, insn.mnemonic));
 		} else if (entry.class === 'ALU') {
 			paramNames.push('A');
 		} else {
@@ -84,7 +84,7 @@ export class RCASMHover {
 		}
 
 		if (insn.p2) {
-			paramNames.push(this.getParamName(insn.p2, insn.mnemonic));
+			paramNames.push(this.getParamName(entry, insn.p2, insn.mnemonic));
 		} else {
 			paramNames.push('?');
 		}
@@ -92,18 +92,24 @@ export class RCASMHover {
 		return paramNames;
 	}
 
-	private getParamName(param: nodes.Operand, mnemonic: string): string {
+	private getParamName(entry: IMnemonicData, param: nodes.Operand, mnemonic: string): string {
 
 		if (param instanceof nodes.Register) {
 			return param.value;
 		}
 
 		if (param instanceof nodes.LabelRef) {
-			return `(${param.getText()})`;
+			return `(${param.getText().trim()})`;
+		}
+
+		if (param instanceof nodes.Expression) {
+			return param.getText().trim();
 		}
 
 		if (param instanceof nodes.Literal) {
 			if (mnemonic.toLowerCase() === 'ldi' && +param.value > 15) {
+				return `0x${param.value.toString(16).toUpperCase()}`;
+			} else if (entry.class === "GOTO") {
 				return `0x${param.value.toString(16).toUpperCase()}`;
 			}
 			return param.value.toString();
