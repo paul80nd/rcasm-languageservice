@@ -4,11 +4,14 @@ import * as nodes from '../parser/rcasmNodes';
 import * as languageFacts from '../languageFacts/facts';
 import { TextDocument, Range, Position, Hover, MarkedString, MarkupContent, MarkupKind, ClientCapabilities, IMnemonicData } from '../rcasmLanguageTypes';
 import { isDefined } from '../utils/objects';
+import { RCASMDataManager } from '../languageFacts/dataManager';
 
 export class RCASMHover {
 	private supportsMarkdown: boolean | undefined;
 
-	constructor(private readonly clientCapabilities: ClientCapabilities | undefined) {
+	constructor(
+		private readonly clientCapabilities: ClientCapabilities | undefined,
+		private readonly rcasmDataManager: RCASMDataManager) {
 	}
 
 	public doHover(document: TextDocument, position: Position, program: nodes.Program): Hover | null {
@@ -29,39 +32,45 @@ export class RCASMHover {
 
 			if (node instanceof nodes.Instruction) {
 				const mnemonicName = node.mnemonic;
-				const entry = languageFacts.rcasmDataManager.getMnemonic(mnemonicName);
+				const entry = this.rcasmDataManager.getMnemonic(mnemonicName);
 				if (entry) {
 					const paramNames = this.getParamNames(entry, node);
-					const content = languageFacts.getEntrySpecificDescription(entry, paramNames, this.doesSupportMarkdown());
-					hover = {
-						contents: content,
-						range: getRange(node)
-					};
+					const contents = languageFacts.getEntrySpecificDescription(entry, paramNames, this.doesSupportMarkdown());
+					if (contents) {
+						hover = { contents, range: getRange(node) };
+					} else {
+						hover = null;
+					}
 				}
+				break;
 			}
 
 			if (node instanceof nodes.SetPC) {
-				const entry = languageFacts.rcasmDataManager.getMnemonic('org');
+				const entry = this.rcasmDataManager.getMnemonic('org');
 				if (entry) {
 					const paramNames = [node.pcExpr.getText()];
-					const content = languageFacts.getEntrySpecificDescription(entry, paramNames, this.doesSupportMarkdown());
-					hover = {
-						contents: content,
-						range: getRange(node)
-					};
+					const contents = languageFacts.getEntrySpecificDescription(entry, paramNames, this.doesSupportMarkdown());
+					if (contents) {
+						hover = { contents, range: getRange(node) };
+					} else {
+						hover = null;
+					}
 				}
+				break;
 			}
 
 			if (node instanceof nodes.DataDirective || node instanceof nodes.FillDirective) {
 				const dtype = node.getText().slice(0, 5).toLowerCase();
-				const entry = languageFacts.rcasmDataManager.getMnemonic(dtype);
+				const entry = this.rcasmDataManager.getDirective(dtype);
 				if (entry) {
-					const content = languageFacts.getEntryDescription(entry, this.doesSupportMarkdown());
-					hover = {
-						contents: content,
-						range: getRange(node)
-					};
+					const contents = languageFacts.getEntryDescription(entry, this.doesSupportMarkdown());
+					if (contents) {
+						hover = { contents, range: getRange(node), };
+					} else {
+						hover = null;
+					}
 				}
+				break;
 			}
 		}
 

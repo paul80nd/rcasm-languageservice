@@ -5,6 +5,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { InsertTextFormat, ClientCapabilities } from '../rcasmLanguageTypes';
 
 import { isDefined } from '../utils/objects';
+import { RCASMDataManager } from '../languageFacts/dataManager';
 
 export class RCASMCompletion {
 
@@ -17,7 +18,7 @@ export class RCASMCompletion {
 	program!: nodes.Program;
 	defaultReplaceRange!: Range;
 
-	constructor(private clientCapabilities: ClientCapabilities | undefined) {
+	constructor(private clientCapabilities: ClientCapabilities | undefined,  private rcasmDataManager: RCASMDataManager) {
 	}
 
 	doComplete(document: TextDocument, position: Position, program: nodes.Program): CompletionList {
@@ -58,7 +59,7 @@ export class RCASMCompletion {
 
 	public getCompletionsForMnemonic(result: CompletionList): CompletionList {
 
-		const properties = languageFacts.rcasmDataManager.getMnemonics();
+		const properties = this.rcasmDataManager.getMnemonics();
 
 		properties.forEach(entry => {
 			let range: Range;

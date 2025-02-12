@@ -1,20 +1,28 @@
 'use strict';
 
-import { MarkupContent, IMnemonicData } from '../rcasmLanguageTypes';
+import { MarkupContent, IMnemonicData, IDirectiveData, MarkupKind } from '../rcasmLanguageTypes';
 
 
-export function getEntryDescription(entry: IEntry2, doesSupportMarkdown: boolean): MarkupContent {
+export function getEntryDescription(entry: IEntry2, doesSupportMarkdown: boolean): MarkupContent | undefined {
+	let result: MarkupContent;
+
 	if (doesSupportMarkdown) {
-		return {
+		result = {
 			kind: 'markdown',
 			value: getEntryMarkdownDescription(entry)
 		};
 	} else {
-		return {
+		result = {
 			kind: 'plaintext',
 			value: getEntryStringDescription(entry)
 		};
 	}
+
+	if (result.value === '') {
+		return undefined;
+	}
+
+	return result;
 }
 
 function getEntryStringDescription(entry: IEntry2): string {
@@ -57,18 +65,26 @@ function getEntryMarkdownDescription(entry: IEntry2): string {
 	return result;
 }
 
-export function getEntrySpecificDescription(entry: IEntry2, paramNames: string[], doesSupportMarkdown: boolean): MarkupContent {
+export function getEntrySpecificDescription(entry: IEntry2, paramNames: string[], doesSupportMarkdown: boolean): MarkupContent | undefined {
+	let result: MarkupContent;
+
 	if (doesSupportMarkdown) {
-		return {
+		result = {
 			kind: 'markdown',
 			value: fillParamPlaceholders(getEntrySpecificMarkdownDescription(entry), paramNames)
 		};
 	} else {
-		return {
+		result = {
 			kind: 'plaintext',
 			value: fillParamPlaceholders(getEntrySpecificStringDescription(entry), paramNames)
 		};
 	}
+
+	if (result.value === '') {
+		return undefined;
+	}
+
+	return result;
 }
 
 function fillParamPlaceholders(value: string, paramNames: string[]): string {
@@ -84,7 +100,7 @@ function fillParamPlaceholders(value: string, paramNames: string[]): string {
 }
 
 function getEntrySpecificStringDescription(entry: IEntry2): string {
-	if (!entry.synopsis || entry.synopsis === '') {
+	if (!('synopsis' in entry) || !entry.synopsis || entry.synopsis === '') {
 		return '';
 	}
 
@@ -104,7 +120,7 @@ function getEntrySpecificStringDescription(entry: IEntry2): string {
 }
 
 function getEntrySpecificMarkdownDescription(entry: IEntry2): string {
-	if (!entry.synopsis || entry.synopsis === '') {
+	if (!('synopsis' in entry) || !entry.synopsis || entry.synopsis === '') {
 		return '';
 	}
 
@@ -123,4 +139,4 @@ function getEntrySpecificMarkdownDescription(entry: IEntry2): string {
 	return result;
 }
 
-export type IEntry2 = IMnemonicData;
+export type IEntry2 = IMnemonicData | IDirectiveData;

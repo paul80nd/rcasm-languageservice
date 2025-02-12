@@ -10,12 +10,16 @@ import {
 	RCASMProgram,
 	LanguageSettings, LanguageServiceOptions,
 	Diagnostic, DocumentSymbol, Position, CompletionList, Hover, Location, DocumentHighlight,
-	SymbolInformation, Range, WorkspaceEdit, TextDocument
+	SymbolInformation, Range, WorkspaceEdit, TextDocument,
+	IRCASMDataProvider
 } from './rcasmLanguageTypes';
+import { RCASMDataManager } from './languageFacts/dataManager';
 
 export * from './rcasmLanguageTypes';
 
 export interface LanguageService {
+	configure(raw?: LanguageSettings): void;
+	setDataProviders(useDefaultDataProvider: boolean, customDataProviders: IRCASMDataProvider[]): void;	
 	doValidation(document: TextDocument, documentSettings?: LanguageSettings): Diagnostic[];
 	parseProgram(document: TextDocument): RCASMProgram;
 	doComplete(document: TextDocument, position: Position, program: RCASMProgram): CompletionList;
@@ -29,14 +33,12 @@ export interface LanguageService {
 	doRename(document: TextDocument, position: Position, newName: string, program: RCASMProgram): WorkspaceEdit;
 }
 
-export function getLanguageService(options?: LanguageServiceOptions): LanguageService {
-	const parser = new RCASMParser();
-	const hover = new RCASMHover(options && options.clientCapabilities);
-	const completion = new RCASMCompletion(options && options.clientCapabilities);
-	const navigation = new RCASMNavigation();
-	const validation = new RCASMValidation();
-
+function createFacade(parser: RCASMParser, completion: RCASMCompletion, hover: RCASMHover, navigation: RCASMNavigation, validation: RCASMValidation, rcasmDataManager: RCASMDataManager): LanguageService {
 	return {
+		configure: (settings) => {
+			validation.configure(settings);
+		},
+		setDataProviders: rcasmDataManager.setDataProviders.bind(rcasmDataManager),
 		doValidation: validation.doValidation.bind(validation),
 		parseProgram: parser.parseProgram.bind(parser),
 		doComplete: completion.doComplete.bind(completion),
@@ -49,4 +51,18 @@ export function getLanguageService(options?: LanguageServiceOptions): LanguageSe
 		prepareRename: navigation.prepareRename.bind(navigation),
 		doRename: navigation.doRename.bind(navigation)
 	};
+}
+
+const defaultLanguageServiceOptions = {};
+
+export function getLanguageService(options: LanguageServiceOptions = defaultLanguageServiceOptions): LanguageService {
+	const rcasmDataManager = new RCASMDataManager(options);
+	return createFacade(
+		new RCASMParser(),
+		new RCASMCompletion(options && options.clientCapabilities, rcasmDataManager),
+		new RCASMHover(options && options.clientCapabilities, rcasmDataManager),
+		new RCASMNavigation(),
+		new RCASMValidation(),
+		rcasmDataManager
+	);
 }

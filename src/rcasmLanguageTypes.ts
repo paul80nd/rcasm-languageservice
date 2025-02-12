@@ -87,6 +87,18 @@ export namespace ClientCapabilities {
 }
 
 export interface LanguageServiceOptions {
+	/**
+	 * Unless set to false, the default RCASM data provider will be used
+	 * along with the providers from customDataProviders.
+	 * Defaults to true.
+	 */
+	useDefaultDataProvider?: boolean;
+
+	/**
+	 * Provide data that could enhance the service's understanding of
+	 * RCASM mnemonic / directives
+	 */
+	customDataProviders?: IRCASMDataProvider[];
 
 	/**
 	 * Describes the LSP capabilities the client supports.
@@ -104,11 +116,20 @@ export interface IMnemonicData {
 	syntax?: string;
 }
 
+export interface IDirectiveData {
+	name: string;
+	summary: string;
+	description?: string | MarkupContent;
+	syntax?: string;
+}
+
 export interface RCASMDataV1 {
 	version: 1;
 	mnemonics?: IMnemonicData[];
+	directives?: IDirectiveData[];
 }
 
 export interface IRCASMDataProvider {
 	provideMnemonics(): IMnemonicData[];
+	provideDirectives(): IDirectiveData[];
 }
