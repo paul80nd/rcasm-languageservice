@@ -237,21 +237,21 @@ export const rcasmData: RCASMDataV1 = {
 			"syntax": "<value>{0x0000,0xFFFF}"
 		},
 		{
-			"name": "dfb",
+			"name": "!byte",
 			"class": "PSEUDO",
 			"summary": "Define Byte Data",
 			"description": "Writes the given 8-bit values directly into the output starting from current location.",
 			"syntax": "<value>{0x00,0xFF} [ ,...n ]"
 		},
 		{
-			"name": "dfw",
+			"name": "!word",
 			"class": "PSEUDO",
 			"summary": "Define Word Data",
 			"description": "Writes the given 16-bit values directly into the output starting from current location.",
 			"syntax": "<value>{0x0000,0xFFFF} [ ,...n ]"
 		},
 		{
-			"name": "dfs",
+			"name": "!fill",
 			"class": "PSEUDO",
 			"summary": "Define Fill Space",
 			"description": "Writes the given 8-bit value n times directly into the output starting from current location.",

@@ -117,22 +117,22 @@ suite('RCASM Hover', () => {
 		assertHoverMkdn('org| 0xFEDC', 'Set Program Counter [PSEUDO]\n\n`PC = 0xFEDC`');
 	});
 
-	test('DFB', () => {
-		assertHoverMkdn('dfb| 0xFE', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
-		assertHoverMkdn('dfb| 0xFE, 123', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
-		assertHoverMkdn('dfb| "test"', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
+	test('Byte Directive', () => {
+		assertHoverMkdn('!byte| 0xFE', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
+		assertHoverMkdn('!byte| 0xFE, 123', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
+		assertHoverMkdn('!byte| "test"', 'Writes the given 8-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x00,0xFF} [ ,...n ]`');
 	});
 
-	test('DFW', () => {
-		assertHoverMkdn('dfw| 0xFEDC', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
-		assertHoverMkdn('dfw| 0xFEDC, 213123', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
-		assertHoverMkdn('dfw| "test"', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
+	test('Word Directive', () => {
+		assertHoverMkdn('!word| 0xFEDC', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
+		assertHoverMkdn('!word| 0xFEDC, 213123', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
+		assertHoverMkdn('!word| "test"', 'Writes the given 16-bit values directly into the output starting from current location.\n\nSyntax: `<value>{0x0000,0xFFFF} [ ,...n ]`');
 	});
 
-	test('DFS', () => {
-		assertHoverMkdn('dfs| 3,0', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
-		assertHoverMkdn('dfs| 4, 0x11', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
-		assertHoverMkdn('dfs| 6, "t"', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
+	test('Fill Directive', () => {
+		assertHoverMkdn('!fill| 3,0', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
+		assertHoverMkdn('!fill| 4, 0x11', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
+		assertHoverMkdn('!fill| 6, "t"', 'Writes the given 8-bit value n times directly into the output starting from current location.\n\nSyntax: `<count>{0,255}, <value>{0x00,0xFF}`');
 	});
 
 	test('Branching', () => {

@@ -53,7 +53,7 @@ export class RCASMHover {
 			}
 
 			if (node instanceof nodes.DataDirective || node instanceof nodes.FillDirective) {
-				const dtype = node.getText().slice(0, 3).toLowerCase();
+				const dtype = node.getText().slice(0, 5).toLowerCase();
 				const entry = languageFacts.rcasmDataManager.getMnemonic(dtype);
 				if (entry) {
 					const content = languageFacts.getEntryDescription(entry, this.doesSupportMarkdown());
