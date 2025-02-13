@@ -5,12 +5,14 @@ import { RCASMCompletion } from './services/rcasmCompletion';
 import { RCASMHover } from './services/rcasmHover';
 import { RCASMNavigation } from './services/rcasmNavigation';
 import { RCASMValidation } from './services/rcasmValidation';
+import { getFoldingRanges } from './services/rcasmFolding';
 
 import {
 	RCASMProgram,
 	LanguageSettings, LanguageServiceOptions,
 	Diagnostic, DocumentSymbol, Position, CompletionList, Hover, Location, DocumentHighlight,
 	SymbolInformation, Range, WorkspaceEdit, TextDocument,
+	FoldingRange,
 	IRCASMDataProvider
 } from './rcasmLanguageTypes';
 import { RCASMDataManager } from './languageFacts/dataManager';
@@ -31,6 +33,7 @@ export interface LanguageService {
 	findDocumentSymbols2(document: TextDocument, program: RCASMProgram): DocumentSymbol[];
 	prepareRename(document: TextDocument, position: Position, program: RCASMProgram): Range | undefined;
 	doRename(document: TextDocument, position: Position, newName: string, program: RCASMProgram): WorkspaceEdit;
+	getFoldingRanges(document: TextDocument, program: RCASMProgram, context?: { rangeLimit?: number; }): FoldingRange[];
 }
 
 function createFacade(parser: RCASMParser, completion: RCASMCompletion, hover: RCASMHover, navigation: RCASMNavigation, validation: RCASMValidation, rcasmDataManager: RCASMDataManager): LanguageService {
@@ -49,7 +52,8 @@ function createFacade(parser: RCASMParser, completion: RCASMCompletion, hover: R
 		findDocumentSymbols: navigation.findSymbolInformations.bind(navigation),
 		findDocumentSymbols2: navigation.findDocumentSymbols.bind(navigation),
 		prepareRename: navigation.prepareRename.bind(navigation),
-		doRename: navigation.doRename.bind(navigation)
+		doRename: navigation.doRename.bind(navigation),
+		getFoldingRanges
 	};
 }
 
