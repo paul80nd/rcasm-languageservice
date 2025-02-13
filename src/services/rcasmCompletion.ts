@@ -73,11 +73,11 @@ export class RCASMCompletion {
 
 			const item: CompletionItem = {
 				label: entry.name,
-				detail: entry.class ? `${entry.summary} [${entry.class}]` : entry.summary,
+				detail: entry.summary,
 				documentation: languageFacts.getEntryDescription(entry, this.doesSupportMarkdown()),
 				textEdit: TextEdit.replace(range, insertText),
 				insertTextFormat: InsertTextFormat.Snippet,
-				kind: CompletionItemKind.Function
+				kind: CompletionItemKind.Method
 			};
 
 			result.items.push(item);
@@ -101,7 +101,8 @@ export class RCASMCompletion {
 				documentation: languageFacts.getEntryDescription(entry, this.doesSupportMarkdown()),
 				textEdit: TextEdit.replace(range, insertText),
 				insertTextFormat: InsertTextFormat.Snippet,
-				kind: CompletionItemKind.Property
+				kind: CompletionItemKind.Property,
+				sortText: entry.name.substring(1)
 			};
 
 			result.items.push(item);

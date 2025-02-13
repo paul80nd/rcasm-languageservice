@@ -1,6 +1,6 @@
 'use strict';
 
-import { MarkupContent, IMnemonicData, IDirectiveData, MarkupKind } from '../rcasmLanguageTypes';
+import { MarkupContent, IMnemonicData, IDirectiveData, MarkupKind, IMnemonicVariant } from '../rcasmLanguageTypes';
 
 
 export function getEntryDescription(entry: IEntry2, doesSupportMarkdown: boolean): MarkupContent | undefined {
@@ -30,16 +30,19 @@ function getEntryStringDescription(entry: IEntry2): string {
 		return '';
 	}
 
-	if (typeof entry.description !== 'string') {
-		return entry.description.value;
-	}
-
-	let result: string = '';
-
-	result += entry.description;
+	let result: string = `${entry.summary}\n\n${entry.description}`;
 
 	if ('syntax' in entry) {
 		result += `\n\nSyntax: ${entry.syntax}`;
+	}
+
+	if ('variants' in entry && entry.variants) {
+		entry.variants.forEach(variant => {
+			result +=  `\n\n\n${entry.summary}\n\n${variant.description}`;
+			if ('syntax' in variant) {
+				result += `\n\nSyntax: ${variant.syntax}`;
+			}
+		});
 	}
 
 	return result;
@@ -50,33 +53,36 @@ function getEntryMarkdownDescription(entry: IEntry2): string {
 		return '';
 	}
 
-	let result: string = '';
-
-	if (typeof entry.description === 'string') {
-		result += entry.description;
-	} else {
-		result = entry.description.value;
-	}
+	let result: string = `__${entry.summary}__  \n${entry.description}`;
 
 	if ('syntax' in entry) {
-		result += `\n\nSyntax: \`${entry.syntax}\``;
+		result += `  \nSyntax: \`${entry.syntax}\``;
+	}
+
+	if ('variants' in entry && entry.variants) {
+		entry.variants.forEach(variant => {
+			result +=  `\n___\n__${variant.summary}__  \n${variant.description}`;
+			if ('syntax' in variant) {
+				result += `  \nSyntax: \`${variant.syntax}\``;
+			}
+		});
 	}
 
 	return result;
 }
 
-export function getEntrySpecificDescription(entry: IEntry2, paramNames: string[], doesSupportMarkdown: boolean): MarkupContent | undefined {
+export function getEntrySpecificDescription(entry: IMnemonicData, paramNames: string[], doesSupportMarkdown: boolean): MarkupContent | undefined {
 	let result: MarkupContent;
 
 	if (doesSupportMarkdown) {
 		result = {
 			kind: 'markdown',
-			value: fillParamPlaceholders(getEntrySpecificMarkdownDescription(entry), paramNames)
+			value: fillParamPlaceholders(getEntrySpecificMarkdownDescription(entry, paramNames), paramNames)
 		};
 	} else {
 		result = {
 			kind: 'plaintext',
-			value: fillParamPlaceholders(getEntrySpecificStringDescription(entry), paramNames)
+			value: fillParamPlaceholders(getEntrySpecificStringDescription(entry, paramNames), paramNames)
 		};
 	}
 
@@ -99,44 +105,48 @@ function fillParamPlaceholders(value: string, paramNames: string[]): string {
 	return value;
 }
 
-function getEntrySpecificStringDescription(entry: IEntry2): string {
-	if (!('synopsis' in entry) || !entry.synopsis || entry.synopsis === '') {
-		return '';
+// Check if there is a variant match by first parameter
+function findVariantMatch(entry: IMnemonicData, paramNames: string[]): IMnemonicVariant | undefined {
+	if (!entry.variants || entry.variants.length === 0 || !paramNames || paramNames.length === 0) {
+		return undefined;
 	}
 
-	let result: string = '';
-
-	if (entry.summary) {
-		if (entry.class) {
-			result += `${entry.summary} [${entry.class}]\n\n`;
-		} else {
-			result += `${entry.summary}\n\n`;
+	for (let i = 0; i < entry.variants.length; i++) {
+		var idx = entry.variants[i].whenFirstParamIs.indexOf(paramNames[0].toLowerCase());
+		if (idx !== -1) {
+			return entry.variants[i];
 		}
 	}
 
-	result += entry.synopsis;
-
-	return result;
+	return undefined;
 }
 
-function getEntrySpecificMarkdownDescription(entry: IEntry2): string {
+function getEntrySpecificStringDescription(entry: IMnemonicData, paramNames: string[]): string {
 	if (!('synopsis' in entry) || !entry.synopsis || entry.synopsis === '') {
 		return '';
 	}
 
-	let result: string = '';
+	const variant = findVariantMatch(entry, paramNames);
+	const summary = variant ? variant.summary : entry.summary;
+	const cls = variant ? variant.class : entry.class;
+	const cycles = variant ? variant.cycles : entry.cycles;
+	const desc = variant ? variant.description : entry.description;
 
-	if (entry.summary) {
-		if (entry.class) {
-			result += `${entry.summary} [${entry.class}]\n\n`;
-		} else {
-			result += `${entry.summary}\n\n`;
-		}
+	return `${summary} ${cls} ${cycles}\n\n${desc}\n\nSynopsis: ${entry.synopsis}`;
+}
+
+function getEntrySpecificMarkdownDescription(entry: IMnemonicData, paramNames: string[]): string {
+	if (!('synopsis' in entry) || !entry.synopsis || entry.synopsis === '') {
+		return '';
 	}
 
-	result += '`' + entry.synopsis + '`';
+	const variant = findVariantMatch(entry, paramNames);
+	const summary = variant ? variant.summary : entry.summary;
+	const cls = variant ? variant.class : entry.class;
+	const cycles = variant ? variant.cycles : entry.cycles;
+	const desc = variant ? variant.description : entry.description;
 
-	return result;
+	return `__${summary}__ ${cls} ${cycles}  \n${desc}  \nSynopsis: \`${entry.synopsis}\``;
 }
 
 export type IEntry2 = IMnemonicData | IDirectiveData;

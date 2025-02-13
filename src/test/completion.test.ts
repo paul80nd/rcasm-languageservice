@@ -103,7 +103,7 @@ export async function testCompletionFor(value: string, expected: ExpectedCompeti
 
 suite('RCASM Completion', () => {
 
-	test('Basic Completion', async function () {
+	test('Mnemonic Completion', async function () {
 		await testCompletionFor('|', {
 			items: [
 				{ label: 'ldi', resultText: 'ldi ${1:a},${2:0}' },
@@ -171,25 +171,43 @@ suite('RCASM Completion', () => {
 
 	});
 
-	test('Completion includes detail', async function () {
-		await testCompletionFor('bc|', {
-			items: [
-				{ label: 'bcs', detail: 'Branch if Carry Set [GOTO]' }
+	test('Mnemonic Completion includes detail', async function () {
+		await testCompletionFor('bc|', { items: [{ label: 'bcs', detail: 'Branch if Carry Set' }] });
+	});
+
+	test('Mnemonic Completion includes documentation', async function () {
+		await testCompletionFor('ad|', {
+			items: [{
+				label: 'add',
+				documentation: {
+					kind: 'markdown',
+					value: '__Arithmetic Add__  \nAdds the contents of register b and c placing the result in dst (a or d). If dst is not specified then register a is assumed. Affects Z (zero), S (sign) and C (carry) flags.  \nSyntax: `add [<dest>{a|d}]`'
+				}
+			}
 			]
 		});
 	});
 
-	test('Completion includes documentation', async function () {
-		await testCompletionFor('ad|', {
-			items: [
-				{
-					label: 'add',
-					documentation: {
-						kind: 'markdown',
-						value:
-							'Adds the contents of register B and C (B+C) placing the result in register A or D.\n\nSyntax: `[ a | d ]`'
-					}
+	test('Directive Completion includes documentation', async function () {
+		await testCompletionFor('!al|', {
+			items: [{
+				label: '!align',
+				documentation: {
+					kind: 'markdown',
+					value: '__Define Align__  \nWrites 8-bit zeros into the output until the current location is a multiple of the given value.  \nSyntax: `<value>{2,4,8,16...}`'
 				}
+			}
+			]
+		});
+	});
+
+	test('Completions in order', async () => {
+		await testCompletionFor('|', {
+			items: [
+				{ label: 'add', sortText: undefined },
+				{ label: '!align', sortText: 'align' },
+				{ label: 'bcs', sortText: undefined },
+				{ label: '!byte', sortText: 'byte' }
 			]
 		});
 	});

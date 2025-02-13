@@ -4,6 +4,7 @@ import {
 	Range, Position, MarkupContent, MarkupKind,
 	Diagnostic, DiagnosticSeverity,
 	Command, CompletionList, CompletionItemKind,
+	FoldingRange, FoldingRangeKind,
 	InsertTextFormat, Location, Hover, MarkedString,
 	SymbolInformation, SymbolKind,
 	DocumentHighlight, DocumentHighlightKind, DocumentSymbol,
@@ -18,6 +19,7 @@ export {
 	Range, Position, MarkupContent, MarkupKind,
 	Diagnostic, DiagnosticSeverity,
 	Command, CompletionList, CompletionItemKind,
+	FoldingRange, FoldingRangeKind,
 	InsertTextFormat, Location, Hover, MarkedString,
 	SymbolInformation, SymbolKind,
 	DocumentHighlight, DocumentHighlightKind, DocumentSymbol,
@@ -108,19 +110,30 @@ export interface LanguageServiceOptions {
 
 export interface IMnemonicData {
 	name: string;
-	class: string | undefined;
+	class: string;
 	summary: string;
+	description: string;
+	cycles: number;
 	snippet?: string;
-	description?: string | MarkupContent;
 	synopsis?: string | MarkupContent;
 	syntax?: string;
+	variants?: IMnemonicVariant[];
+}
+
+export interface IMnemonicVariant {
+	class: string;
+	summary: string;
+	cycles: number;
+	description: string;
+	syntax: string;
+	whenFirstParamIs: string[];
 }
 
 export interface IDirectiveData {
 	name: string;
 	summary: string;
+	description: string;
 	snippet?: string;
-	description?: string | MarkupContent;
 	syntax?: string;
 }
 
