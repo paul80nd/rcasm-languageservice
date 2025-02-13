@@ -53,12 +53,14 @@ suite('RCASM Symbols', () => {
 		let ls = getLanguageService();
 		assertSymbolInfos(ls, 'label1: add', [{ name: 'label1', kind: SymbolKind.Variable, location: Location.create('test://test/test.rcasm', newRange(0, 6)) }]);
 		assertSymbolInfos(ls, 'label2: jmp label2', [{ name: 'label2', kind: SymbolKind.Variable, location: Location.create('test://test/test.rcasm', newRange(0, 6)) }]);
+		assertSymbolInfos(ls, 'label3: jmp label3   ', [{ name: 'label3', kind: SymbolKind.Variable, location: Location.create('test://test/test.rcasm', newRange(0, 6)) }]);
 	});
 
 	test('basic document symbols', () => {
 		let ls = getLanguageService();
 		assertDocumentSymbols(ls, 'label1: add', [{ name: 'label1', kind: SymbolKind.Variable, range: newRange(0, 6), selectionRange: newRange(0, 6) }]);
 		assertDocumentSymbols(ls, 'label2: jmp label2', [{ name: 'label2', kind: SymbolKind.Variable, range: newRange(0, 6), selectionRange: newRange(0, 6) }]);
+		assertDocumentSymbols(ls, 'label3: jmp label3   ', [{ name: 'label3', kind: SymbolKind.Variable, range: newRange(0, 6), selectionRange: newRange(0, 6) }]);
 	});
 });
 
@@ -68,6 +70,7 @@ suite('RCASM Highlights', () => {
 		let ls = getLanguageService();
 		assertHighlights(ls, 'label1: add', 'label1', 1, 1);
 		assertHighlights(ls, 'label2: jmp label2', 'label2', 2, 1);
+		assertHighlights(ls, 'label3: jmp label3  ', 'label3', 2, 1);
 	});
 });
 

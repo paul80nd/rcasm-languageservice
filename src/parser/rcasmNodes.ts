@@ -228,7 +228,10 @@ export class Instruction extends Node {
 export type Operand = LabelRef | Literal | Register;
 
 export class LabelRef extends Node {
-	constructor(sqi: rcasm.ScopeQualifiedIdent) { super(sqi, NodeType.LabelRef); }
+	constructor(sqi: rcasm.ScopeQualifiedIdent) { 
+		super(sqi, NodeType.LabelRef); 
+		this.length = sqi.path.at(-1)!.length;
+	}
 }
 
 export class Literal extends Node {
