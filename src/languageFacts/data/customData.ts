@@ -277,6 +277,13 @@ export const rcasmData: RCASMDataV1 = {
 			"description": "Writes the given 8-bit value n times directly into the output starting from current location.",
 			"snippet": "!fill ${1:8},${2:0x00}",
 			"syntax": "<count>{0,255}, <value>{0x00,0xFF}"
+		},
+		{
+			"name": "!for",
+			"summary": "Define For Loop",
+			"description": "Defines a loop that will be expanded at assembly time. The loop will be expanded n times.",
+			"snippet": "!for ${1:i} in range(${2:5}) {\n        ${3:add}\n}",
+			"syntax": "<variable> in range([<start> ,] <end>)"
 		}
 	]
 };

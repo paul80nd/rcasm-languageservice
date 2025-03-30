@@ -153,13 +153,21 @@ suite('RCASM Hover', () => {
 		assertHoverMkdn('!fill| 6, "t"', fillContent);
 	});
 
+	test('For Directive', () => {
+		const forContent = '__Define For Loop__  \nDefines a loop that will be expanded at assembly time. The loop will be expanded n times.  \nSyntax: `<variable> in range([<start> ,] <end>)`';
+		assertHoverMkdn('!for| i in range(10) {\nadd\n}', forContent);
+		assertHoverMkdn('!for i i|n range(2, 10) {\ninc\n}', forContent);
+		assertHoverMkdn('!for i in ran|ge(4, 6) {\norr\n}', forContent);
+		assertHoverMkdn('!for i in range(4, 6) {\nmo|v a,b\n}', move8Content + '`A = B`');
+	});
+
 	test('Align Directive', () => {
 		assertHoverMkdn('!align| 4', '__Define Align__  \nWrites 8-bit zeros into the output until the current location is a multiple of the given value.  \nSyntax: `<value>{2,4,8,16...}`');
 	});
 
 	test('Branching', () => {
 		assertHoverMkdn('jm|p label1', jmpContent + '`PC = (label1)`');
-		assertHoverMkdn('jsr |label2 ', jsrContent +  '`XY = PC, PC = (label2)`');
+		assertHoverMkdn('jsr |label2 ', jsrContent + '`XY = PC, PC = (label2)`');
 		assertHoverMkdn('bne lab|el3', '__Branch if Not Equal (not zero)__ GOTO 24  \nJumps to label if Z is not set (last ALU operation result was not 0).  \nSynopsis: `PC = (label3) [if not Z]`');
 		assertHoverMkdn('beq label4|', '__Branch if Equal (zero)__ GOTO 24  \nJumps to label if Z flag is set (last ALU operation result was 0).  \nSynopsis: `PC = (label4) [if Z]`');
 		assertHoverMkdn('ble| label5 ', '__Branch if Less Than or Equal (sign or zero)__ GOTO 24  \nJumps to label if S or Z is set (last ALU operation resulted in a zero or negative value).  \nSynopsis: `PC = (label5) [if S or Z]`');

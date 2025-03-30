@@ -21,11 +21,21 @@ function r(startLine: number, endLine: number, kind?: FoldingRangeKind | string)
 suite('RCASM Folding - Basic', () => {
 	test('Fold single scope', () => {
 		const input = [
-				/*0*/'foo: {',
-				/*1*/'  add',
-				/*2*/'}'
+			'foo: {',
+			'  add',
+			'}'
 		];
 		assertRanges(input, [r(0, 2, 'region')]);
+	});
+
+	test('Fold for directive', () => {
+		const input = [
+			'add',
+			'!for i in range(2,5) {',
+			'  add',
+			'}'
+		];
+		assertRanges(input, [r(1, 3, 'region')]);
 	});
 
 	//	test('No fold for single line', () => {

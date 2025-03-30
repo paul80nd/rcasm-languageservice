@@ -160,6 +160,10 @@ class Line extends Node {
 					break;
 				case 'align':
 					this.adoptChild(new AlignDirective(l.stmt));
+					break;
+				case 'for':
+					this.adoptChild(new ForDirective(l.stmt));
+					break;
 			}
 		}
 	}
@@ -199,6 +203,15 @@ export class DataDirective extends Node { constructor(d: rcasm.StmtData) { super
 export class FillDirective extends Node { constructor(d: rcasm.StmtFill) { super(d, NodeType.Directive); } }
 export class AlignDirective extends Node { constructor(d: rcasm.StmtAlign) { super(d, NodeType.Directive); } }
 
+export class ForDirective extends Node {
+	constructor(ss: rcasm.StmtFor) {
+		super(ss, NodeType.Directive);
+		ss.body!.forEach(s => {
+			this.adoptChild(new Line(s));
+		});
+	}
+}
+
 export class Instruction extends Node {
 
 	public mnemonic: string;
@@ -228,8 +241,8 @@ export class Instruction extends Node {
 export type Operand = LabelRef | Literal | Register;
 
 export class LabelRef extends Node {
-	constructor(sqi: rcasm.ScopeQualifiedIdent) { 
-		super(sqi, NodeType.LabelRef); 
+	constructor(sqi: rcasm.ScopeQualifiedIdent) {
+		super(sqi, NodeType.LabelRef);
 		this.length = sqi.path.at(-1)!.length;
 	}
 }

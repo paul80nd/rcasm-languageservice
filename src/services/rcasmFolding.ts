@@ -25,6 +25,14 @@ function computeFoldingRanges(document: TextDocument, program: nodes.Program): F
 				kind: 'region'
 			});
 			return false;
+		} else if (node instanceof nodes.ForDirective) {
+			const range = getRange(node);
+			ranges.push({
+				startLine: range.start.line,
+				endLine: range.end.line,
+				kind: 'region'
+			});
+			return false;
 		}
 		return true;
 	});

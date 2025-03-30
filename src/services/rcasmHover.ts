@@ -59,6 +59,26 @@ export class RCASMHover {
 				break;
 			}
 
+			if (node instanceof nodes.ForDirective) {
+				// Only respond if on first line of node (node includes the for directive and the body)
+				const range = getRange(node);
+				if (position.line !== range.start.line) {
+					continue;
+				}
+
+				const dtype = node.getText().slice(0, 4).toLowerCase();
+				const entry = this.rcasmDataManager.getDirective(dtype);
+				if (entry) {
+					const contents = languageFacts.getEntryDescription(entry, this.doesSupportMarkdown());
+					if (contents) {
+						hover = { contents, range: getRange(node), };
+					} else {
+						hover = null;
+					}
+				}
+				break;
+			}
+
 			if (node instanceof nodes.DataDirective || node instanceof nodes.FillDirective) {
 				const dtype = node.getText().slice(0, 5).toLowerCase();
 				const entry = this.rcasmDataManager.getDirective(dtype);
