@@ -27,7 +27,7 @@ function assertDiagnostic(input: string, message: string,
 suite('RCASM Validate', () => {
 
 	test('parse fails', function () {
-		assertDiagnostic('start: ldi a,', 'Syntax error: Expected current-pc, identifier, literal, or register but end of input found.', 0, 13, 0, 13);
+		assertDiagnostic('start: ldi a,', 'Syntax error: Expected "(", current-pc, identifier, literal, or register but end of input found.', 0, 13, 0, 13);
 	});
 
 	test('unknown mnemonic', function () {
