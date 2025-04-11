@@ -298,6 +298,13 @@ export const rcasmData: RCASMDataV1 = {
 			"description": "Defines a variable that can be substituted into the output at assembly time.",
 			"snippet": "!let ${1:i} = ${2:0}",
 			"syntax": "<variable> = <value>"
+		},
+		{
+			"name": "!error",
+			"summary": "Throw Assembly Error",
+			"description": "Intentionally raises an error at assembly time. Typically used within an !if directive to assert that a condition is met.",
+			"snippet": "!if (${1:i == 0}) { !error \"${2:Error message}\" }",
+			"syntax": "\"<message>\""
 		}
 	]
 };

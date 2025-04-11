@@ -59,7 +59,7 @@ export class RCASMHover {
 				break;
 			}
 
-			if (node instanceof nodes.ForDirective || node instanceof nodes.IfDirective || node instanceof nodes.LetDirective) {
+			if (node instanceof nodes.ForDirective || node instanceof nodes.IfDirective || node instanceof nodes.LetDirective || node instanceof nodes.ErrorDirective) {
 				// Only respond if on first line of node (node includes the for directive and the body)
 				const range = getRange(node);
 				if (position.line !== range.start.line) {

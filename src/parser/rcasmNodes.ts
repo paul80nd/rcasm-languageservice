@@ -170,6 +170,9 @@ class Line extends Node {
 				case 'let':
 					this.adoptChild(new LetDirective(l.stmt));
 					break;
+				case 'error':
+					this.adoptChild(new ErrorDirective(l.stmt));
+					break;
 			}
 		}
 	}
@@ -209,6 +212,7 @@ export class DataDirective extends Node { constructor(d: rcasm.StmtData) { super
 export class FillDirective extends Node { constructor(d: rcasm.StmtFill) { super(d, NodeType.Directive); } }
 export class AlignDirective extends Node { constructor(d: rcasm.StmtAlign) { super(d, NodeType.Directive); } }
 export class LetDirective extends Node { constructor(d: rcasm.StmtLet) { super(d, NodeType.Directive); } }
+export class ErrorDirective extends Node { constructor(d: rcasm.StmtError) { super(d, NodeType.Directive); } }
 
 export class ForDirective extends Node {
 	constructor(ss: rcasm.StmtFor) {
