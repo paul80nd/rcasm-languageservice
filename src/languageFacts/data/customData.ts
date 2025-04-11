@@ -291,6 +291,13 @@ export const rcasmData: RCASMDataV1 = {
 			"description": "Defines a block of code that will be output at assembly time if the condition is met.",
 			"snippet": "!if (${1:i == 0}) {\n        ${2:add}\n}",
 			"syntax": "(<condition>)"
+		},
+		{
+			"name": "!let",
+			"summary": "Define Variable",
+			"description": "Defines a variable that can be substituted into the output at assembly time.",
+			"snippet": "!let ${1:i} = ${2:0}",
+			"syntax": "<variable> = <value>"
 		}
 	]
 };
