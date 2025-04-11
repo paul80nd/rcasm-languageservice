@@ -1,6 +1,6 @@
 {
   "name": "@paul80nd/rcasm-languageservice",
-  "version": "5.12.0",
+  "version": "5.13.0",
   "description": "Language service for Relay Computer Assembly",
   "main": "./lib/umd/rcasmLanguageService.js",
   "typings": "./lib/umd/rcasmLanguageService",
