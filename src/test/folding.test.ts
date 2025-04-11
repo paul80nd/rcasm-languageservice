@@ -38,6 +38,19 @@ suite('RCASM Folding - Basic', () => {
 		assertRanges(input, [r(1, 3, 'region')]);
 	});
 
+	test('Fold for with nested if directive', () => {
+		const input = [
+			'add',
+			'!for i in range(2,5) {',
+			'  !if (i == 3) {',
+			'    add',
+			'  }',
+			'  add',
+			'}'
+		];
+		assertRanges(input, [r(1, 6, 'region'), r(2, 4, 'region')]);
+	});
+
 	//	test('No fold for single line', () => {
 	//		const input = [
 	//			'.foo { color: red; }'

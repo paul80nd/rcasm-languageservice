@@ -284,6 +284,13 @@ export const rcasmData: RCASMDataV1 = {
 			"description": "Defines a loop that will be expanded at assembly time. The loop will be expanded n times.",
 			"snippet": "!for ${1:i} in range(${2:5}) {\n        ${3:add}\n}",
 			"syntax": "<variable> in range([<start> ,] <end>)"
+		},
+		{
+			"name": "!if",
+			"summary": "Define Conditional Block",
+			"description": "Defines a block of code that will be output at assembly time if the condition is met.",
+			"snippet": "!if (${1:i == 0}) {\n        ${2:add}\n}",
+			"syntax": "(<condition>)"
 		}
 	]
 };

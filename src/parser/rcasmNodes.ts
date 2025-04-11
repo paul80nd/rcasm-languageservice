@@ -164,6 +164,9 @@ class Line extends Node {
 				case 'for':
 					this.adoptChild(new ForDirective(l.stmt));
 					break;
+				case 'if':
+					this.adoptChild(new IfDirective(l.stmt));
+					break;
 			}
 		}
 	}
@@ -207,6 +210,20 @@ export class ForDirective extends Node {
 	constructor(ss: rcasm.StmtFor) {
 		super(ss, NodeType.Directive);
 		ss.body!.forEach(s => {
+			this.adoptChild(new Line(s));
+		});
+	}
+}
+
+export class IfDirective extends Node {
+	constructor(ss: rcasm.StmtIfElse) {
+		super(ss, NodeType.Directive);
+		ss.cases.forEach(c => {
+			c[1].forEach(s => {
+				this.adoptChild(new Line(s));
+			});
+		});
+		ss.elseBranch?.forEach(s => {
 			this.adoptChild(new Line(s));
 		});
 	}
