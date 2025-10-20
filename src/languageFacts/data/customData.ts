@@ -99,6 +99,22 @@ export const rcasmData: RCASMDataV1 = {
 			"syntax": "cmp [<dest>{a|d}]"
 		},
 		{
+			"name": "div",
+			"class": "INCXY", "cycles": 24,
+			"summary": "Integer Division ⚠️EXPERIMENTAL⚠️",
+			"description": "Performs an integer division of register b by register c placing the quotient result in dst (a or d). If dst is not specified then register a is assumed.",
+			"synopsis": "{0} = B / C",
+			"syntax": "div [<dest>{a|d}]"
+		},
+		{
+			"name": "dvr",
+			"class": "INCXY", "cycles": 24,
+			"summary": "Remainder Division ⚠️EXPERIMENTAL⚠️",
+			"description": "Performs a further division of the last `div` or `mod` remainder by register c placing the quotient result in dst (a or d). Register B should be set to 0. If dst is not specified then register a is assumed.",
+			"synopsis": "{0} = R / C",
+			"syntax": "dvr [<dest>{a|d}]"
+		},
+		{
 			"name": "eor",
 			"class": "ALU", "cycles": 8,
 			"summary": "Logic Xor",
@@ -152,6 +168,22 @@ export const rcasmData: RCASMDataV1 = {
 			"description": "Loads register dst (a, b, c or d) with the byte in memory currently referenced by register m.",
 			"synopsis": "{0} = (M)",
 			"syntax": "ldr <dst>{a|b|c|d}"
+		},
+		{
+			"name": "mod",
+			"class": "INCXY", "cycles": 24,
+			"summary": "Modulo Operation ⚠️EXPERIMENTAL⚠️",
+			"description": "Performs an integer division of register b by register c placing the remainder result in dst (a or d). If dst is not specified then register a is assumed.",
+			"synopsis": "{0} = B % C",
+			"syntax": "mod [<dest>{a|d}]"
+		},
+		{
+			"name": "mdr",
+			"class": "INCXY", "cycles": 24,
+			"summary": "Remainder Modulo ⚠️EXPERIMENTAL⚠️",
+			"description": "Performs a further modulo of the last `div` or `mod` remainder by register c placing the remainder result in dst (a or d). Register B should be set to 0. If dst is not specified then register a is assumed.",
+			"synopsis": "{0} = R % C",
+			"syntax": "dvr [<dest>{a|d}]"
 		},
 		{
 			"name": "jmp",
