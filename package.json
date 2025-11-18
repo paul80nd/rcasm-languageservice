@@ -25,7 +25,7 @@
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "@paul80nd/rcasm": "1.15.0",
+    "@paul80nd/rcasm": "1.18.2",
     "vscode-languageserver-textdocument": "^1.0.12",
     "vscode-languageserver-types": "3.17.5",
     "vscode-uri": "^3.1.0"
