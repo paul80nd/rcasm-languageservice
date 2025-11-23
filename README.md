@@ -1,5 +1,7 @@
 # rcasm-languageservice
 
+** ARCHIVED: Functionality replaced by <https://github.com/paul80nd/rcasm-lsp> **
+
 Relay Computer Assembly language service designed for use in either VSCode or the Monaco editor
 (based on [microsoft/vscode-css-languageservice](https://github.com/microsoft/vscode-css-languageservice)).
 
